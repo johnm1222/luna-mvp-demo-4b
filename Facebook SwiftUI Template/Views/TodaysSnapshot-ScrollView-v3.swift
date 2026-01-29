@@ -508,38 +508,41 @@ struct TodaysSnapshotScrollView: View {
     
     private func placeholderPostCard(imageName: String, username: String = "User") -> some View {
         // ZStack with full-bleed image and overlaid text
-        ZStack(alignment: .topLeading) {
-            // Base Layer: Full-bleed image fills entire card
-            Image(imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 172, height: 259.571)
-                .clipped()
-            
-            // Top Layer: Header with text shadow for readability
-            HStack(spacing: 8) {
+        GeometryReader { geometry in
+            ZStack(alignment: .topLeading) {
+                // Base Layer: Full-bleed image fills entire card
                 Image(imageName)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 20, height: 20)
-                    .clipShape(Circle())
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+                    .clipped()
                 
-                Text(username)
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(.white)
-                    .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
-                
-                Spacer()
+                // Top Layer: Header with text shadow for readability
+                HStack(spacing: 8) {
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 20, height: 20)
+                        .clipShape(Circle())
+                    
+                    Text(username)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.white)
+                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                    
+                    Spacer()
+                }
+                .padding(12)
             }
-            .padding(12)
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color("borderUiEmphasis"), lineWidth: 1)
+            )
+            .clipped()
         }
-        .frame(width: 172, height: 259.571)
-        .cornerRadius(12)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color("borderUiEmphasis"), lineWidth: 1)
-        )
-        .clipped()
+        .aspectRatio(172/259.571, contentMode: .fit)
     }
     
     // MARK: - Highlight List Item
