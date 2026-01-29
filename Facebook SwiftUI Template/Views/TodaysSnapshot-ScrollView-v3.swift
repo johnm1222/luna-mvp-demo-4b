@@ -663,6 +663,127 @@ struct TodaysSnapshotScrollView: View {
         formatter.dateFormat = "MMMM d"
         return formatter.string(from: Date())
     }
+    
+    // MARK: - Sources Bottom Sheet
+    
+    private func sourcesBottomSheet(unitId: Int) -> some View {
+        VStack(spacing: 0) {
+            // Scroll Handle
+            RoundedRectangle(cornerRadius: 2)
+                .fill(Color("bottomSheetHandle"))
+                .frame(width: 40, height: 4)
+                .padding(.top, 6)
+                .padding(.bottom, 6)
+            
+            // Header with title and X button
+            ZStack {
+                Text("Sources")
+                    .headline3EmphasizedTypography()
+                    .foregroundColor(Color("primaryText"))
+                
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        showSourcesSheet = nil
+                    }) {
+                        Image("nav-cross-filled")
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(Color("primaryIcon"))
+                    }
+                    .padding(.trailing, 12)
+                }
+            }
+            .frame(height: 48)
+            .background(Color("bottomSheetBackgroundDeemphasized"))
+            
+            // Source Links List
+            VStack(spacing: 12) {
+                // Container with white background for list items
+                VStack(spacing: 0) {
+                    ForEach(getSourceLinks(for: unitId), id: \.title) { source in
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(source.title)
+                                .headline4Typography()
+                                .foregroundColor(Color("primaryText"))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Text(source.url)
+                                .meta3Typography()
+                                .foregroundColor(Color("secondaryText"))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 12)
+                        
+                        if source.title != getSourceLinks(for: unitId).last?.title {
+                            Divider()
+                                .background(Color("divider"))
+                                .padding(.horizontal, 12)
+                        }
+                    }
+                }
+                .background(Color("cardBackground"))
+                .cornerRadius(8)
+            }
+            .padding(12)
+            .background(Color("bottomSheetBackgroundDeemphasized"))
+            
+            // Home Affordance (iOS bottom bar indicator)
+            Color.clear
+                .frame(height: 34)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 3)
+                        .fill(Color.black)
+                        .frame(width: 134, height: 5)
+                )
+                .background(Color("bottomSheetBackgroundDeemphasized"))
+        }
+        .background(Color("bottomSheetBackgroundDeemphasized"))
+        .cornerRadius(16, corners: [.topLeft, .topRight])
+        .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: -1)
+        .shadow(color: Color.black.opacity(0.05), radius: 0, x: 0, y: -1)
+    }
+    
+    // MARK: - Source Links Data
+    
+    private func getSourceLinks(for unitId: Int) -> [(title: String, url: String)] {
+        switch unitId {
+        case 1: // Pantone
+            return [
+                (title: "1. COLOR OF THE YEAR - PANTONE", url: "https://www.pantone.com/articles/color-of-the-year"),
+                (title: "2. Pantone names its Color of the Year for...", url: "https://www.cnn.com/2025/12/04/style/pantone"),
+                (title: "3. A Guide to All the Pantone Colors", url: "https://www.housebeautiful.com/colors/g69646915")
+            ]
+        case 2: // Jokic
+            return [
+                (title: "1. Nikola Jokić Leading MVP Race Again", url: "https://www.espn.com/nba/story/jokic-mvp"),
+                (title: "2. Denver Nuggets Center Dominates Stats", url: "https://www.nba.com/stats/jokic-efficiency"),
+                (title: "3. MVP Voting Tracker - January Update", url: "https://www.basketball-reference.com/mvp")
+            ]
+        case 3: // Winter Kids
+            return [
+                (title: "1. Winter Programs at Children's Museum", url: "https://www.mychildrensmuseum.org/winter"),
+                (title: "2. Sensory Play for Cold Weather Months", url: "https://www.earlylearning.org/sensory-winter"),
+                (title: "3. Registration Opens for 2026 Sessions", url: "https://www.mychildrensmuseum.org/register")
+            ]
+        case 4: // Toddler Snacks
+            return [
+                (title: "1. High-Protein Snacks for Toddlers", url: "https://www.healthline.com/nutrition/toddler-protein"),
+                (title: "2. Hemp Hearts: Complete Protein Source", url: "https://www.medicalnewstoday.com/hemp-hearts"),
+                (title: "3. Easy Toddler Snack Recipes", url: "https://www.foodnetwork.com/toddler-snacks")
+            ]
+        case 5: // Denver Restaurant Week
+            return [
+                (title: "1. Denver Restaurant Week 2026 Guide", url: "https://www.denverrestaurantweek.com"),
+                (title: "2. Top Participating Restaurants in RiNo", url: "https://www.westword.com/dining/restaurant-week"),
+                (title: "3. How to Make Reservations Early", url: "https://www.opentable.com/denver-restaurant-week")
+            ]
+        default:
+            return []
+        }
+    }
 }
 
 // MARK: - Highlight Item Model
@@ -1012,127 +1133,6 @@ struct SimpleVideoPlayerView: View {
         ) { _ in
             player?.seek(to: .zero)
             player?.play()
-        }
-    }
-    
-    // MARK: - Sources Bottom Sheet
-    
-    private func sourcesBottomSheet(unitId: Int) -> some View {
-        VStack(spacing: 0) {
-            // Scroll Handle
-            RoundedRectangle(cornerRadius: 2)
-                .fill(Color("bottomSheetHandle"))
-                .frame(width: 40, height: 4)
-                .padding(.top, 6)
-                .padding(.bottom, 6)
-            
-            // Header with title and X button
-            ZStack {
-                Text("Sources")
-                    .headline3EmphasizedTypography()
-                    .foregroundColor(Color("primaryText"))
-                
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        showSourcesSheet = nil
-                    }) {
-                        Image("nav-cross-filled")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(Color("primaryIcon"))
-                    }
-                    .padding(.trailing, 12)
-                }
-            }
-            .frame(height: 48)
-            .background(Color("bottomSheetBackgroundDeemphasized"))
-            
-            // Source Links List
-            VStack(spacing: 12) {
-                // Container with white background for list items
-                VStack(spacing: 0) {
-                    ForEach(getSourceLinks(for: unitId), id: \.title) { source in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(source.title)
-                                .headline4Typography()
-                                .foregroundColor(Color("primaryText"))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            Text(source.url)
-                                .meta3Typography()
-                                .foregroundColor(Color("secondaryText"))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 12)
-                        
-                        if source.title != getSourceLinks(for: unitId).last?.title {
-                            Divider()
-                                .background(Color("divider"))
-                                .padding(.horizontal, 12)
-                        }
-                    }
-                }
-                .background(Color("cardBackground"))
-                .cornerRadius(8)
-            }
-            .padding(12)
-            .background(Color("bottomSheetBackgroundDeemphasized"))
-            
-            // Home Affordance (iOS bottom bar indicator)
-            Color.clear
-                .frame(height: 34)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 3)
-                        .fill(Color.black)
-                        .frame(width: 134, height: 5)
-                )
-                .background(Color("bottomSheetBackgroundDeemphasized"))
-        }
-        .background(Color("bottomSheetBackgroundDeemphasized"))
-        .cornerRadius(16, corners: [.topLeft, .topRight])
-        .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: -1)
-        .shadow(color: Color.black.opacity(0.05), radius: 0, x: 0, y: -1)
-    }
-    
-    // MARK: - Source Links Data
-    
-    private func getSourceLinks(for unitId: Int) -> [(title: String, url: String)] {
-        switch unitId {
-        case 1: // Pantone
-            return [
-                (title: "1. COLOR OF THE YEAR - PANTONE", url: "https://www.pantone.com/articles/color-of-the-year"),
-                (title: "2. Pantone names its Color of the Year for...", url: "https://www.cnn.com/2025/12/04/style/pantone"),
-                (title: "3. A Guide to All the Pantone Colors", url: "https://www.housebeautiful.com/colors/g69646915")
-            ]
-        case 2: // Jokic
-            return [
-                (title: "1. Nikola Jokić Leading MVP Race Again", url: "https://www.espn.com/nba/story/jokic-mvp"),
-                (title: "2. Denver Nuggets Center Dominates Stats", url: "https://www.nba.com/stats/jokic-efficiency"),
-                (title: "3. MVP Voting Tracker - January Update", url: "https://www.basketball-reference.com/mvp")
-            ]
-        case 3: // Winter Kids
-            return [
-                (title: "1. Winter Programs at Children's Museum", url: "https://www.mychildrensmuseum.org/winter"),
-                (title: "2. Sensory Play for Cold Weather Months", url: "https://www.earlylearning.org/sensory-winter"),
-                (title: "3. Registration Opens for 2026 Sessions", url: "https://www.mychildrensmuseum.org/register")
-            ]
-        case 4: // Toddler Snacks
-            return [
-                (title: "1. High-Protein Snacks for Toddlers", url: "https://www.healthline.com/nutrition/toddler-protein"),
-                (title: "2. Hemp Hearts: Complete Protein Source", url: "https://www.medicalnewstoday.com/hemp-hearts"),
-                (title: "3. Easy Toddler Snack Recipes", url: "https://www.foodnetwork.com/toddler-snacks")
-            ]
-        case 5: // Denver Restaurant Week
-            return [
-                (title: "1. Denver Restaurant Week 2026 Guide", url: "https://www.denverrestaurantweek.com"),
-                (title: "2. Top Participating Restaurants in RiNo", url: "https://www.westword.com/dining/restaurant-week"),
-                (title: "3. How to Make Reservations Early", url: "https://www.opentable.com/denver-restaurant-week")
-            ]
-        default:
-            return []
         }
     }
 }
