@@ -15,6 +15,7 @@ struct TodaysSnapshotScrollView: View {
     @State private var lastScrollOffset: CGFloat = 0
     @State private var hasSnapped = false
     @State private var showSourcesSheet: Int? = nil  // Track which unit's sources to show
+    @State private var isProgrammaticScroll = false  // Disable snap during programmatic scrolls
     
     // Snap thresholds: Y positions where each unit is "in focus" (top of unit at top of viewport)
     private let focusPositions: [Int: CGFloat] = [
@@ -176,8 +177,12 @@ struct TodaysSnapshotScrollView: View {
                                     leftAddOn: .icon("arrow-down-outline"),
                                     customColor: Color("accentColor"),
                                     action: {
+                                        isProgrammaticScroll = true
                                         withAnimation(.easeInOut(duration: 0.45)) {
                                             proxy.scrollTo("snapshot-1", anchor: .top)
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                            isProgrammaticScroll = false
                                         }
                                     }
                                 )
@@ -190,8 +195,12 @@ struct TodaysSnapshotScrollView: View {
                                     label: "",
                                     leftAddOn: .icon("arrow-up-outline"),
                                     action: {
+                                        isProgrammaticScroll = true
                                         withAnimation(.easeInOut(duration: 0.45)) {
                                             proxy.scrollTo("header", anchor: .top)
+                                        }
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                            isProgrammaticScroll = false
                                         }
                                     }
                                 )
@@ -585,8 +594,16 @@ struct TodaysSnapshotScrollView: View {
     private func highlightListItem(item: HighlightItem, index: Int, proxy: ScrollViewProxy) -> some View {
         // Body Outer Container: 8px top/bottom, 0px left/right
         Button(action: {
+            // Disable snap during programmatic scroll
+            isProgrammaticScroll = true
+            
             withAnimation(.easeInOut(duration: 0.45)) {
                 proxy.scrollTo("snapshot-\(index + 1)", anchor: .top)
+            }
+            
+            // Re-enable snap after scroll completes
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                isProgrammaticScroll = false
             }
         }) {
             // ContentRightAddon: 12px left/right, 0px top/bottom, 12px gap between children
@@ -623,6 +640,9 @@ struct TodaysSnapshotScrollView: View {
     private func checkAndSnapIfNeeded(proxy: ScrollViewProxy, oldOffset: CGFloat, newOffset: CGFloat) {
         // Prevent multiple snaps in quick succession
         guard !hasSnapped else { return }
+        
+        // Disable snap during programmatic scrolls from highlights
+        guard !isProgrammaticScroll else { return }
         
         // Don't snap if we're beyond 2958 (allow free scrolling at bottom)
         if newOffset > 2958 {
