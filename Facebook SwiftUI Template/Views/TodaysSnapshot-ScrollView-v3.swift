@@ -4,9 +4,16 @@ import SwiftUI
 
 struct TodaysSnapshotScrollView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var scrollOffset: CGFloat = 0
+    @State private var initialY: CGFloat = 0
+    
+    // DEBUG: Toggle this to show/hide scroll position indicator
+    private let showScrollDebug = true
     
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack(alignment: .topLeading) {
+            // Main Content Layer
+            VStack(spacing: 0) {
             // Navigation Bar (fixed at top)
             FDSNavigationBarCentered(
                 backAction: { dismiss() }
@@ -19,6 +26,19 @@ struct TodaysSnapshotScrollView: View {
                         // Header Section
                         headerSection
                             .id("header")
+                            .background(
+                                GeometryReader { geo in
+                                    Color.clear
+                                        .onChange(of: geo.frame(in: .global).minY) { oldValue, newValue in
+                                            // Set initial position once when first measured
+                                            if initialY == 0 {
+                                                initialY = newValue
+                                            }
+                                            // Calculate scroll: 0 at top, increases as you scroll down
+                                            scrollOffset = max(0, initialY - newValue)
+                                        }
+                                }
+                            )
                         
                         // Highlights Section
                         highlightsSection(proxy: proxy)
@@ -39,6 +59,20 @@ struct TodaysSnapshotScrollView: View {
                             .frame(height: 500)
                     }
                 }
+            }
+            
+            // DEBUG: Scroll Position Indicator (Floating Layer)
+            if showScrollDebug {
+                Text("\(Int(scrollOffset))")
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.red.opacity(0.8))
+                    .cornerRadius(6)
+                    .padding(.leading, 12)
+                    .padding(.top, 8)
+                    .allowsHitTesting(false)
             }
         }
         .navigationBarHidden(true)
