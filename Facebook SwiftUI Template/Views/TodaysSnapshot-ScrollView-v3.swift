@@ -4,31 +4,72 @@ import SwiftUI
 
 struct TodaysSnapshotScrollView: View {
     @Environment(\.dismiss) private var dismiss
+    @State private var scrollOffset: CGFloat = 0
+    @State private var initialY: CGFloat = 0
+    
+    // DEBUG: Toggle this to show/hide scroll position indicator
+    private let showScrollDebug = true
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Navigation Bar (fixed at top)
-            FDSNavigationBarCentered(
-                backAction: { dismiss() }
-            )
-            
-            // Main Scrollable Content with Anchors
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(spacing: 0) {
-                        // Header Section
-                        headerSection
-                            .id("header")
-                        
-                        // Next sections will go here
-                        // Highlights section .id("highlights")
-                        // Story sections .id("story-1"), .id("story-2"), etc.
-                        
-                        // Temporary spacing
-                        Color.clear
-                            .frame(height: 500)
+        ZStack(alignment: .topLeading) {
+            // Main Content Layer
+            VStack(spacing: 0) {
+                // Navigation Bar (fixed at top)
+                FDSNavigationBarCentered(
+                    backAction: { dismiss() }
+                )
+                
+                // Main Scrollable Content with Anchors
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            // Header Section
+                            headerSection
+                                .id("header")
+                                .background(
+                                    GeometryReader { geo in
+                                        Color.clear
+                                            .onChange(of: geo.frame(in: .global).minY) { oldValue, newValue in
+                                                // Set initial position once when first measured
+                                                if initialY == 0 {
+                                                    initialY = newValue
+                                                }
+                                                // Calculate scroll: 0 at top, increases as you scroll down
+                                                scrollOffset = max(0, initialY - newValue)
+                                            }
+                                    }
+                                )
+                            
+                            // Highlights Section
+                            highlightsSection(proxy: proxy)
+                                .id("highlights")
+                            
+                        // Snapshot Unit
+                        snapshotUnit()
+                            
+                            // Next sections will go here
+                            // Story sections .id("story-1"), .id("story-2"), etc.
+                            
+                            // Temporary spacing
+                            Color.clear
+                                .frame(height: 500)
+                        }
                     }
                 }
+            }
+            
+            // DEBUG: Scroll Position Indicator (Floating Layer)
+            if showScrollDebug {
+                Text("\(Int(scrollOffset))")
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.red.opacity(0.8))
+                    .cornerRadius(6)
+                    .padding(.leading, 12)
+                    .padding(.top, 8)
+                    .allowsHitTesting(false)
             }
         }
         .navigationBarHidden(true)
@@ -80,6 +121,231 @@ struct TodaysSnapshotScrollView: View {
         .background(Color("surfaceBackground"))
     }
     
+    // MARK: - Highlights Section
+    
+    private func highlightsSection(proxy: ScrollViewProxy) -> some View {
+        // ListCellTable Container (gray background: F2F4F7)
+        VStack(spacing: 0) {
+            // White Card with list items
+            VStack(spacing: 0) {
+                // Unit Header: "Highlights" (has built-in padding: 12h, 20t, 8b)
+                FDSUnitHeader(
+                    headlineText: "Highlights",
+                    hierarchyLevel: .level3
+                )
+                .padding(.top, 8)  // Additional 8px on top of built-in 20px = 28px total
+                // FDSUnitHeader already has: 20px top, 8px bottom, 12px horizontal
+                // Need 16px between header and first item: 8px (built-in) + 8px = 16px
+                
+                // Group Container (Items Container)
+                VStack(spacing: 0) {
+                    ForEach(highlightItems.indices, id: \.self) { index in
+                        highlightListItem(item: highlightItems[index], index: index, proxy: proxy)
+                    }
+                }
+                .padding(.top, 8)  // 8px (UnitHeader bottom) + 8px = 16px total
+                .padding(.bottom, 8)
+            }
+            .background(Color("cardBackground"))  // White background
+            .cornerRadius(8)
+        }
+        .padding(.top, 20)
+        .padding(.bottom, 20)
+        .padding(.horizontal, 12)
+        .background(Color("bottomSheetBackgroundDeemphasized"))  // Gray background F2F4F7
+    }
+    
+    // MARK: - Snapshot Unit
+    
+    private func snapshotUnit() -> some View {
+        VStack(spacing: 0) {
+            // Unit Header with emoji + title + 3-dot menu
+            FDSUnitHeader(
+                headlineText: "🎨 Pantone's color of the year",
+                hierarchyLevel: .level3,
+                rightAddOn: .iconButton(
+                    icon: "dots-3-horizontal-filled",
+                    action: {},
+                    isDisabled: false
+                )
+            )
+            
+            // Body Text
+            Text("Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design.")
+                .font(.system(size: 15))
+                .lineSpacing(5) // 20px line-height
+                .foregroundColor(Color("primaryText"))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 12)
+            
+            // "Sources" Action Chip
+            HStack {
+                FDSActionChip(
+                    size: .small,
+                    label: "Sources",
+                    isMenu: false,
+                    action: {}
+                )
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 12)
+            
+            // "More about this" Heading
+            Text("More about this")
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(Color("primaryText"))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 8)
+            
+            // Row of 2 Posts (8px gap)
+            HStack(spacing: 8) {
+                // Post 1
+                placeholderPostCard()
+                
+                // Post 2
+                placeholderPostCard()
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 8)
+            
+            // "See more" Button
+            Button(action: {}) {
+                HStack(spacing: 4) {
+                    Text("See more")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(Color("secondaryText"))
+                    
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 12))
+                        .foregroundColor(Color("secondaryText"))
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 32)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            
+            // Footer Action Chips (thumbs up/down)
+            HStack(spacing: 8) {
+                FDSActionChip(
+                    size: .large,
+                    label: "",
+                    leftAddOn: .icon("hand-thumbs-up-outline"),
+                    action: {}
+                )
+                
+                FDSActionChip(
+                    size: .large,
+                    label: "",
+                    leftAddOn: .icon("hand-thumbs-down-outline"),
+                    action: {}
+                )
+                
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 12)
+        }
+        .background(Color("cardBackground"))  // White background
+    }
+    
+    // MARK: - Placeholder Post Card
+    
+    private func placeholderPostCard() -> some View {
+        VStack(spacing: 0) {
+            // Post Header
+            HStack(spacing: 8) {
+                Image("pantone_1")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 20, height: 20)
+                    .clipShape(Circle())
+                
+                Text("Becker Threads")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Color("primaryText"))
+                
+                Spacer()
+            }
+            .padding(12)
+            
+            // Media placeholder (grey box with Pantone text)
+            ZStack {
+                Color.gray.opacity(0.2)
+                
+                VStack {
+                    Spacer()
+                    Text("PANTONE®\nPQ-11-4201TCX")
+                        .font(.system(size: 14, weight: .bold))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.black)
+                        .padding(.bottom, 40)
+                }
+            }
+            .frame(height: 150)
+            .clipped()
+            
+            // Reactions (simplified)
+            HStack {
+                Text("42")
+                    .font(.system(size: 13))
+                    .foregroundColor(Color("secondaryText"))
+                Spacer()
+                Text("13")
+                    .font(.system(size: 13))
+                    .foregroundColor(Color("secondaryText"))
+            }
+            .padding(12)
+        }
+        .background(Color("cardBackground"))
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color("borderUiEmphasis"), lineWidth: 1)
+        )
+    }
+    
+    // MARK: - Highlight List Item
+    
+    private func highlightListItem(item: HighlightItem, index: Int, proxy: ScrollViewProxy) -> some View {
+        // Body Outer Container: 8px top/bottom, 0px left/right
+        Button(action: {
+            withAnimation {
+                proxy.scrollTo("story-\(index + 1)", anchor: .top)
+            }
+        }) {
+            // ContentRightAddon: 12px left/right, 0px top/bottom, 12px gap between children
+            HStack(alignment: .center, spacing: 12) {
+                // TextPairing: 4px top/bottom, 0px left/right, 2px gap, grow
+                VStack(alignment: .leading, spacing: 2) {
+                    // TextBlock: 15px font, 20px line-height
+                    (Text(item.title)
+                        .font(.body3Link)  // Body 3 Link (bold/semibold)
+                    + Text(" ")
+                    + Text(item.body)
+                        .font(.body3))  // Body 3 (regular)
+                        .foregroundColor(Color("primaryText"))
+                }
+                .padding(.vertical, 4)  // TextPairing padding
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                // ProfilePhotoCircle32Px
+                Image(item.profileImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 32, height: 32)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .padding(.horizontal, 12)  // ContentRightAddon horizontal padding
+            .contentShape(Rectangle())
+        }
+        .padding(.vertical, 8)  // Body Outer Container vertical padding
+        .buttonStyle(FDSPressedState(cornerRadius: 0))
+    }
+    
     // MARK: - Helpers
     
     private var formattedDate: String {
@@ -88,6 +354,44 @@ struct TodaysSnapshotScrollView: View {
         return formatter.string(from: Date())
     }
 }
+
+// MARK: - Highlight Item Model
+
+struct HighlightItem {
+    let title: String
+    let body: String
+    let profileImage: String
+}
+
+// MARK: - Sample Data
+
+private let highlightItems: [HighlightItem] = [
+    HighlightItem(
+        title: "Pantone's Color of the Year",
+        body: "for 2026, Cloud Dancer, emphasizes connection, adaptability, and optimism.",
+        profileImage: "pantone_1"
+    ),
+    HighlightItem(
+        title: "Jokic MVP race lead",
+        body: "holds despite missed games, keeping league-wide debate intense through the midseason stretch.",
+        profileImage: "jokic_1"
+    ),
+    HighlightItem(
+        title: "Children Museum Winter Programs",
+        body: "expansion adds new hands-on activities for toddlers and young children.",
+        profileImage: "winter1"
+    ),
+    HighlightItem(
+        title: "High protein toddler snacks",
+        body: "can be easily upgraded using simple pantry additions recommended by dietitians.",
+        profileImage: "ffmeal_1"
+    ),
+    HighlightItem(
+        title: "Denver Restaurant Week Dates",
+        body: "were announced, featuring prix-fixe menus at 300+ restaurants.",
+        profileImage: "denver1"
+    )
+]
 
 #Preview {
     NavigationStack {

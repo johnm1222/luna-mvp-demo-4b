@@ -21,6 +21,20 @@
                ReferencedContainer = "container:Facebook SwiftUI Template.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "889A21182CAC656A00E158DF"
+               BuildableName = "luna-demo.app"
+               BlueprintName = "luna-demo"
+               ReferencedContainer = "container:luna-mvp-demo-v4b.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -47,7 +61,7 @@
             BlueprintIdentifier = "889A21182CAC656A00E158DF"
             BuildableName = "luna-demo.app"
             BlueprintName = "luna-demo"
-            ReferencedContainer = "container:luna-mvp-demo-v4.xcodeproj">
+            ReferencedContainer = "container:luna-mvp-demo-v4b.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <MacroExpansion>
