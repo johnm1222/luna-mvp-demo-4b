@@ -121,8 +121,8 @@ struct TodaysSnapshotScrollView: View {
                                 footerSection
                                     .id("footer")
                             }
-                            .background(Color(hex: "C9CCD1"))
                             .padding(.top, 4)
+                            .background(Color(hex: "C9CCD1"))
                         }
                     }
                 }
