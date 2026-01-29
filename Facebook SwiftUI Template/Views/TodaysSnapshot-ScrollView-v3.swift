@@ -583,35 +583,43 @@ struct TodaysSnapshotScrollView: View {
     // MARK: - Helpers
     
     private func checkAndSnapIfNeeded(proxy: ScrollViewProxy, oldOffset: CGFloat, newOffset: CGFloat) {
-        // Only snap when scrolling upward (scroll value increasing)
-        guard newOffset > oldOffset else {
-            hasSnapped = false  // Reset snap flag when changing direction
-            return
-        }
-        
         // Prevent multiple snaps in quick succession
         guard !hasSnapped else { return }
+        
+        let isScrollingUp = newOffset > oldOffset
         
         // Check each focus position to see if we're in snap range
         for (unitId, focusPosition) in focusPositions {
             let distanceToFocus = focusPosition - newOffset
             
-            // If within threshold range (0 to 140 pixels below focus position)
-            if distanceToFocus >= 0 && distanceToFocus <= snapThreshold {
-                print("🧲 SNAP! Scrolled to \(Int(newOffset)), snapping to unit \(unitId) at \(Int(focusPosition))")
-                hasSnapped = true
-                
-                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                    proxy.scrollTo("snapshot-\(unitId)", anchor: .top)
+            if isScrollingUp {
+                // Scrolling upward: snap when approaching from below (within 280px below focus)
+                if distanceToFocus >= 0 && distanceToFocus <= snapThreshold {
+                    print("🧲 SNAP UP! Scrolled to \(Int(newOffset)), snapping to unit \(unitId) at \(Int(focusPosition))")
+                    performSnap(to: unitId, proxy: proxy)
+                    break
                 }
-                
-                // Reset snap flag after a delay
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    hasSnapped = false
+            } else {
+                // Scrolling downward: snap when approaching from above (within 280px above focus)
+                if distanceToFocus <= 0 && abs(distanceToFocus) <= snapThreshold {
+                    print("🧲 SNAP DOWN! Scrolled to \(Int(newOffset)), snapping to unit \(unitId) at \(Int(focusPosition))")
+                    performSnap(to: unitId, proxy: proxy)
+                    break
                 }
-                
-                break
             }
+        }
+    }
+    
+    private func performSnap(to unitId: Int, proxy: ScrollViewProxy) {
+        hasSnapped = true
+        
+        withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+            proxy.scrollTo("snapshot-\(unitId)", anchor: .top)
+        }
+        
+        // Reset snap flag after a delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            hasSnapped = false
         }
     }
     
