@@ -1,4 +1,6 @@
 import SwiftUI
+import AVKit
+import AVFoundation
 
 // MARK: - Today's Snapshot Scroll View v3
 
@@ -6,9 +8,11 @@ struct TodaysSnapshotScrollView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var scrollOffset: CGFloat = 0
     @State private var initialY: CGFloat = 0
+    @State private var showVideoPlayer = false
+    @State private var selectedVideoName: String = ""
     
     // DEBUG: Toggle this to show/hide scroll position indicator
-    private let showScrollDebug = true
+    private let showScrollDebug = false
     
     var body: some View {
         // Main Scrollable Content with Anchors
@@ -154,6 +158,10 @@ struct TodaysSnapshotScrollView: View {
             }
             .navigationBarHidden(true)
         }
+        .fullScreenCover(isPresented: $showVideoPlayer) {
+            SimpleVideoPlayerView(videoName: selectedVideoName, isPresented: $showVideoPlayer)
+                .transition(.move(edge: .trailing))
+        }
     }
     
     // MARK: - Header Section
@@ -283,12 +291,24 @@ struct TodaysSnapshotScrollView: View {
             // Row of 2 Posts (8px gap)
             HStack(spacing: 8) {
                 // Post 1
-                placeholderPostCard(imageName: "pantone_1")
-                    .frame(maxWidth: .infinity)
+                Button(action: {
+                    selectedVideoName = "pantone_1"
+                    showVideoPlayer = true
+                }) {
+                    placeholderPostCard(imageName: "pantone_1")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(PlainButtonStyle())
                 
                 // Post 2
-                placeholderPostCard(imageName: "pantone_2")
-                    .frame(maxWidth: .infinity)
+                Button(action: {
+                    selectedVideoName = "pantone_2"
+                    showVideoPlayer = true
+                }) {
+                    placeholderPostCard(imageName: "pantone_2")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(PlainButtonStyle())
             }
             .padding(.horizontal, 12)
             .padding(.bottom, 8)
@@ -483,6 +503,76 @@ extension Color {
             blue:  Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+}
+
+// MARK: - Simple Video Player View
+
+struct SimpleVideoPlayerView: View {
+    let videoName: String
+    @Binding var isPresented: Bool
+    @State private var isPlaying = true
+    @State private var player: AVPlayer?
+    
+    var body: some View {
+        ZStack {
+            // Video Player
+            if let player = player {
+                VideoPlayer(player: player)
+                    .ignoresSafeArea()
+                    .onAppear {
+                        player.play()
+                    }
+                    .onDisappear {
+                        player.pause()
+                    }
+            }
+            
+            // Back Button (Top Left)
+            VStack {
+                HStack {
+                    Button(action: {
+                        isPresented = false
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(width: 44, height: 44)
+                            .background(Color.black.opacity(0.3))
+                            .clipShape(Circle())
+                    }
+                    .padding(.leading, 16)
+                    .padding(.top, 60)
+                    
+                    Spacer()
+                }
+                Spacer()
+            }
+        }
+        .onAppear {
+            setupPlayer()
+        }
+    }
+    
+    private func setupPlayer() {
+        // Try to load the video from the bundle
+        if let bundleURL = Bundle.main.url(forResource: videoName, withExtension: "mp4") {
+            player = AVPlayer(url: bundleURL)
+        } else {
+            // If video doesn't exist, create a blank player
+            print("Video not found: \(videoName).mp4")
+            player = AVPlayer()
+        }
+        
+        // Setup looping
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: player?.currentItem,
+            queue: .main
+        ) { _ in
+            player?.seek(to: .zero)
+            player?.play()
+        }
     }
 }
 
