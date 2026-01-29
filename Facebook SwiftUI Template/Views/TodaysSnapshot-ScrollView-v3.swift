@@ -90,7 +90,11 @@ struct TodaysSnapshotScrollView: View {
                                 snapshotUnit(
                                     unitId: 5,
                                     title: "🍣 Denver Restaurant Week",
-                                    bodyText: "The annual event features multi-course menus at set price tiers, giving diners a chance to try new restaurants at a lower cost. Participating spots span downtown, RiNo, LoHi, and neighborhood corridors across the metro area. Reservations tend to book early for higher-profile restaurants."
+                                    bodyText: "The annual event features multi-course menus at set price tiers, giving diners a chance to try new restaurants at a lower cost. Participating spots span downtown, RiNo, LoHi, and neighborhood corridors across the metro area. Reservations tend to book early for higher-profile restaurants.",
+                                    image1: "DenverRestaruant",
+                                    image2: "DenverRestaruant-1",
+                                    image3: "DenverRestaruant-2",
+                                    image4: "DenverRestaruant-3"
                                 )
                                 .id("snapshot-5")
                             }
@@ -255,7 +259,7 @@ struct TodaysSnapshotScrollView: View {
     
     // MARK: - Snapshot Unit
     
-    private func snapshotUnit(unitId: Int, title: String, bodyText: String, image1: String = "pantone_1", image2: String = "pantone_2") -> some View {
+    private func snapshotUnit(unitId: Int, title: String, bodyText: String, image1: String = "pantone_1", image2: String = "pantone_2", image3: String? = nil, image4: String? = nil) -> some View {
         VStack(spacing: 0) {
             // Unit Header with emoji + title + 3-dot menu
             FDSUnitHeader(
@@ -330,7 +334,7 @@ struct TodaysSnapshotScrollView: View {
                             selectedVideoName = "dance"
                             showVideoPlayer = true
                         }) {
-                            placeholderPostCard(imageName: image1)
+                            placeholderPostCard(imageName: image3 ?? image1)
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -340,7 +344,7 @@ struct TodaysSnapshotScrollView: View {
                             selectedVideoName = "dance"
                             showVideoPlayer = true
                         }) {
-                            placeholderPostCard(imageName: image2)
+                            placeholderPostCard(imageName: image4 ?? image2)
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(PlainButtonStyle())
