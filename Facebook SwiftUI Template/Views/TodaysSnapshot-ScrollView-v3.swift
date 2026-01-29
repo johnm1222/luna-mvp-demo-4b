@@ -39,6 +39,12 @@ struct TodaysSnapshotScrollView: View {
                     FDSNavigationBarCentered(
                         backAction: { dismiss() }
                     )
+                    .shadow(
+                        color: scrollOffset >= 10 ? Color.black.opacity(0.1) : Color.clear,
+                        radius: scrollOffset >= 10 ? 4 : 0,
+                        x: 0,
+                        y: 1
+                    )
                     
                     ScrollView {
                         VStack(spacing: 0) {
