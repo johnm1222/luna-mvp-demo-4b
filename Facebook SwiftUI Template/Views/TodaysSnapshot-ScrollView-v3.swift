@@ -449,7 +449,7 @@ struct TodaysSnapshotScrollView: View {
             }
             .padding(12)
         }
-        .frame(height: 259.571)
+        .frame(width: 172, height: 259.571)
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
