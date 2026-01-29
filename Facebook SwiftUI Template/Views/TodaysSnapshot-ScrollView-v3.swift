@@ -203,10 +203,10 @@ struct TodaysSnapshotScrollView: View {
             // Row of 2 Posts (8px gap)
             HStack(spacing: 8) {
                 // Post 1
-                placeholderPostCard()
+                placeholderPostCard(imageName: "pantone_1")
                 
                 // Post 2
-                placeholderPostCard()
+                placeholderPostCard(imageName: "pantone_2")
             }
             .padding(.horizontal, 12)
             .padding(.bottom, 8)
@@ -254,11 +254,11 @@ struct TodaysSnapshotScrollView: View {
     
     // MARK: - Placeholder Post Card
     
-    private func placeholderPostCard() -> some View {
+    private func placeholderPostCard(imageName: String) -> some View {
         VStack(spacing: 0) {
             // Post Header
             HStack(spacing: 8) {
-                Image("pantone_1")
+                Image(imageName)
                     .resizable()
                     .scaledToFill()
                     .frame(width: 20, height: 20)
@@ -271,22 +271,14 @@ struct TodaysSnapshotScrollView: View {
                 Spacer()
             }
             .padding(12)
+            .background(Color("cardBackground"))
             
-            // Media placeholder (grey box with Pantone text)
-            ZStack {
-                Color.gray.opacity(0.2)
-                
-                VStack {
-                    Spacer()
-                    Text("PANTONE®\nPQ-11-4201TCX")
-                        .font(.system(size: 14, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .foregroundColor(.black)
-                        .padding(.bottom, 40)
-                }
-            }
-            .frame(height: 150)
-            .clipped()
+            // Media - Full width edge-to-edge image
+            Image(imageName)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 150)
+                .clipped()
             
             // Reactions (simplified)
             HStack {
@@ -299,6 +291,7 @@ struct TodaysSnapshotScrollView: View {
                     .foregroundColor(Color("secondaryText"))
             }
             .padding(12)
+            .background(Color("cardBackground"))
         }
         .background(Color("cardBackground"))
         .cornerRadius(12)
