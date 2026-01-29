@@ -468,7 +468,7 @@ struct TodaysSnapshotScrollView: View {
             }
         }) {
             // ContentRightAddon: 12px left/right, 0px top/bottom, 12px gap between children
-            HStack(alignment: .center, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 // TextPairing: 4px top/bottom, 0px left/right, 2px gap, grow
                 VStack(alignment: .leading, spacing: 2) {
                     // TextBlock: 15px font, 20px line-height
