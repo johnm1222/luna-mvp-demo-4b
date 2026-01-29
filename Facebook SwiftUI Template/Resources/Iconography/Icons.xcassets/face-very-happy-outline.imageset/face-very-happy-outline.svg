@@ -1,0 +1,13 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_29901_26307)">
+<path d="M16.5 10C17.3284 10 18 9.32843 18 8.5C18 7.67157 17.3284 7 16.5 7C15.6716 7 15 7.67157 15 8.5C15 9.32843 15.6716 10 16.5 10Z" fill="#080809" style="fill:#080809;fill:color(display-p3 0.0314 0.0314 0.0353);fill-opacity:1;"/>
+<path d="M9 8.5C9 9.32843 8.32843 10 7.5 10C6.67157 10 6 9.32843 6 8.5C6 7.67157 6.67157 7 7.5 7C8.32843 7 9 7.67157 9 8.5Z" fill="#080809" style="fill:#080809;fill:color(display-p3 0.0314 0.0314 0.0353);fill-opacity:1;"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7 12C6.44772 12 6 12.4477 6 13C6 16.3137 8.68629 19 12 19C15.3137 19 18 16.3137 18 13C18 12.4477 17.5523 12 17 12H7ZM12 17C10.1362 17 8.57006 15.7252 8.12602 14H15.874C15.4299 15.7252 13.8638 17 12 17Z" fill="#080809" style="fill:#080809;fill:color(display-p3 0.0314 0.0314 0.0353);fill-opacity:1;"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 0.5C5.64873 0.5 0.5 5.64873 0.5 12C0.5 18.3513 5.64873 23.5 12 23.5C18.3513 23.5 23.5 18.3513 23.5 12C23.5 5.64873 18.3513 0.5 12 0.5ZM2.5 12C2.5 6.75329 6.75329 2.5 12 2.5C17.2467 2.5 21.5 6.75329 21.5 12C21.5 17.2467 17.2467 21.5 12 21.5C6.75329 21.5 2.5 17.2467 2.5 12Z" fill="#080809" style="fill:#080809;fill:color(display-p3 0.0314 0.0314 0.0353);fill-opacity:1;"/>
+</g>
+<defs>
+<clipPath id="clip0_29901_26307">
+<rect width="24" height="24" fill="white" style="fill:white;fill-opacity:1;"/>
+</clipPath>
+</defs>
+</svg>
