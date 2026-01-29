@@ -271,7 +271,6 @@ struct TodaysSnapshotScrollView: View {
                 Spacer()
             }
             .padding(12)
-            .background(Color("cardBackground"))
             
             // Media - Full width edge-to-edge image
             Image(imageName)
@@ -291,9 +290,7 @@ struct TodaysSnapshotScrollView: View {
                     .foregroundColor(Color("secondaryText"))
             }
             .padding(12)
-            .background(Color("cardBackground"))
         }
-        .background(Color("cardBackground"))
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
