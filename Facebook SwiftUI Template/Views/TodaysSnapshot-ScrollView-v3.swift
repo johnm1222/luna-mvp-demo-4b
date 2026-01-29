@@ -24,6 +24,13 @@ struct TodaysSnapshotScrollView: View {
                         highlightsSection(proxy: proxy)
                             .id("highlights")
                         
+                        // Red VStack Unit
+                        VStack {
+                            
+                        }
+                        .frame(width: 375, height: 300)
+                        .background(Color.red)
+                        
                         // Next sections will go here
                         // Story sections .id("story-1"), .id("story-2"), etc.
                         
