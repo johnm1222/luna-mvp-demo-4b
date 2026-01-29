@@ -203,9 +203,11 @@ struct TodaysSnapshotScrollView: View {
             HStack(spacing: 8) {
                 // Post 1
                 placeholderPostCard(imageName: "pantone_1")
+                    .frame(maxWidth: .infinity)
                 
                 // Post 2
                 placeholderPostCard(imageName: "pantone_2")
+                    .frame(maxWidth: .infinity)
             }
             .padding(.horizontal, 12)
             .padding(.bottom, 8)
@@ -260,7 +262,7 @@ struct TodaysSnapshotScrollView: View {
             Image(imageName)
                 .resizable()
                 .scaledToFill()
-                .frame(width: 172, height: 259.571)
+                .frame(height: 259.571)
                 .clipped()
             
             // Top Layer: Header with text shadow for readability
@@ -280,7 +282,7 @@ struct TodaysSnapshotScrollView: View {
             }
             .padding(12)
         }
-        .frame(width: 172, height: 259.571)
+        .frame(height: 259.571)
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
