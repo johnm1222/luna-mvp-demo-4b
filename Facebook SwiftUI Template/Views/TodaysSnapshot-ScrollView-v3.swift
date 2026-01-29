@@ -61,7 +61,9 @@ struct TodaysSnapshotScrollView: View {
                                 // 2. Jokic MVP race lead
                                 snapshotUnit(
                                     title: "🏀 Jokic MVP race lead",
-                                    bodyText: "Even with limited availability during brief injury absences, Jokic's overall impact continues to separate him from other contenders. His efficiency, playmaking, and on-court control remain central to Denver's success, reinforcing his value beyond raw scoring totals."
+                                    bodyText: "Even with limited availability during brief injury absences, Jokic's overall impact continues to separate him from other contenders. His efficiency, playmaking, and on-court control remain central to Denver's success, reinforcing his value beyond raw scoring totals.",
+                                    image1: "nba_1",
+                                    image2: "nba_2"
                                 )
                                 .id("snapshot-2")
                                 
@@ -247,7 +249,7 @@ struct TodaysSnapshotScrollView: View {
     
     // MARK: - Snapshot Unit
     
-    private func snapshotUnit(title: String, bodyText: String) -> some View {
+    private func snapshotUnit(title: String, bodyText: String, image1: String = "pantone_1", image2: String = "pantone_2") -> some View {
         VStack(spacing: 0) {
             // Unit Header with emoji + title + 3-dot menu
             FDSUnitHeader(
@@ -296,7 +298,7 @@ struct TodaysSnapshotScrollView: View {
                     selectedVideoName = "dance"
                     showVideoPlayer = true
                 }) {
-                    placeholderPostCard(imageName: "pantone_1")
+                    placeholderPostCard(imageName: image1)
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(PlainButtonStyle())
@@ -306,7 +308,7 @@ struct TodaysSnapshotScrollView: View {
                     selectedVideoName = "dance"
                     showVideoPlayer = true
                 }) {
-                    placeholderPostCard(imageName: "pantone_2")
+                    placeholderPostCard(imageName: image2)
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(PlainButtonStyle())
