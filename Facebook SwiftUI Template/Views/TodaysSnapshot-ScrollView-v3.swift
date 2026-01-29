@@ -332,7 +332,7 @@ struct TodaysSnapshotScrollView: View {
     private func highlightListItem(item: HighlightItem, index: Int, proxy: ScrollViewProxy) -> some View {
         // Body Outer Container: 8px top/bottom, 0px left/right
         Button(action: {
-            withAnimation {
+            withAnimation(.easeInOut(duration: 0.45)) {
                 proxy.scrollTo("snapshot-\(index + 1)", anchor: .top)
             }
         }) {
