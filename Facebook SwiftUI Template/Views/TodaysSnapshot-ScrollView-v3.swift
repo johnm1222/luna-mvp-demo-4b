@@ -92,42 +92,46 @@ struct TodaysSnapshotScrollView: View {
                         }
                     }
                 }
-            }
-            
-            // DEBUG: Scroll Position Indicator (Floating Layer)
-            if showScrollDebug {
-                Text("\(Int(scrollOffset))")
-                    .font(.system(size: 14, weight: .bold, design: .monospaced))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.red.opacity(0.8))
-                    .cornerRadius(6)
-                    .padding(.leading, 12)
-                    .padding(.top, 8)
-                    .allowsHitTesting(false)
-            }
-            
-            // Floating Action Button (Bottom Layer)
-            VStack {
-                Spacer()
                 
-                FDSActionChip(
-                    size: .medium,
-                    label: "Explore Today's snapshot",
-                    leftAddOn: .icon("arrow-down-outline"),
-                    action: {
-                        withAnimation(.easeInOut(duration: 0.45)) {
-                            proxy.scrollTo("snapshot-1", anchor: .top)
-                        }
+                // DEBUG: Scroll Position Indicator (Floating Layer)
+                if showScrollDebug {
+                    Text("\(Int(scrollOffset))")
+                        .font(.system(size: 14, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.red.opacity(0.8))
+                        .cornerRadius(6)
+                        .padding(.leading, 12)
+                        .padding(.top, 8)
+                        .allowsHitTesting(false)
+                }
+                
+                // Floating Action Button (Bottom Layer)
+                VStack {
+                    Spacer()
+                    
+                    HStack {
+                        Spacer()
+                        FDSActionChip(
+                            size: .medium,
+                            label: "Explore Today's snapshot",
+                            leftAddOn: .icon("arrow-down-outline"),
+                            action: {
+                                withAnimation(.easeInOut(duration: 0.45)) {
+                                    proxy.scrollTo("snapshot-1", anchor: .top)
+                                }
+                            }
+                        )
+                        .shadow(color: Color.black.opacity(0.1), radius: 16, x: 0, y: 2)
+                        Spacer()
                     }
-                )
-                .shadow(color: Color.black.opacity(0.1), radius: 16, x: 0, y: 2)
+                }
+                .padding(.bottom, 24)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .allowsHitTesting(true)
             }
-            .padding(.bottom, 24)
-            .frame(maxWidth: .infinity)
-        }
-        .navigationBarHidden(true)
+            .navigationBarHidden(true)
     }
     
     // MARK: - Header Section
