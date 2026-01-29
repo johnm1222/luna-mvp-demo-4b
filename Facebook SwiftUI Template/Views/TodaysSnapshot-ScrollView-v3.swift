@@ -11,6 +11,7 @@ struct TodaysSnapshotScrollView: View {
     @State private var initialY: CGFloat = 0
     @State private var showVideoPlayer = false
     @State private var selectedVideoName: String = ""
+    @State private var expandedUnits: [Int: Bool] = [:]  // Track which units are expanded
     
     // DEBUG: Toggle this to show/hide scroll position indicator
     private let showScrollDebug = false
@@ -53,6 +54,7 @@ struct TodaysSnapshotScrollView: View {
                             VStack(spacing: 4) {
                                 // 1. Pantone's color of the year
                                 snapshotUnit(
+                                    unitId: 1,
                                     title: "🎨 Pantone's color of the year",
                                     bodyText: "Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design."
                                 )
@@ -60,6 +62,7 @@ struct TodaysSnapshotScrollView: View {
                                 
                                 // 2. Jokic MVP race lead
                                 snapshotUnit(
+                                    unitId: 2,
                                     title: "🏀 Jokic MVP race lead",
                                     bodyText: "Even with limited availability during brief injury absences, Jokic's overall impact continues to separate him from other contenders. His efficiency, playmaking, and on-court control remain central to Denver's success, reinforcing his value beyond raw scoring totals.",
                                     image1: "nba_1",
@@ -69,6 +72,7 @@ struct TodaysSnapshotScrollView: View {
                                 
                                 // 3. Children Museum Winter Programs
                                 snapshotUnit(
+                                    unitId: 3,
                                     title: "❄️ Children Museum Winter Programs",
                                     bodyText: "New program focused on movement, sensory play, and early learning experiences designed for colder months. Sessions are structured with shorter time blocks and caregiver-friendly pacing, making them accessible for younger age groups. Registration is now open."
                                 )
@@ -76,6 +80,7 @@ struct TodaysSnapshotScrollView: View {
                                 
                                 // 4. High Protein Toddler Snacks
                                 snapshotUnit(
+                                    unitId: 4,
                                     title: "🥣 High Protein Toddler Snacks",
                                     bodyText: "Nutrition experts suggest adding ingredients like hemp hearts, peanut butter, or cottage cheese to familiar snacks. These additions help support healthy growth without requiring complex meal prep. Hemp hearts are especially notable as a complete protein, containing all nine essential amino acids."
                                 )
@@ -83,6 +88,7 @@ struct TodaysSnapshotScrollView: View {
                                 
                                 // 5. Denver Restaurant Week
                                 snapshotUnit(
+                                    unitId: 5,
                                     title: "🍣 Denver Restaurant Week",
                                     bodyText: "The annual event features multi-course menus at set price tiers, giving diners a chance to try new restaurants at a lower cost. Participating spots span downtown, RiNo, LoHi, and neighborhood corridors across the metro area. Reservations tend to book early for higher-profile restaurants."
                                 )
@@ -249,7 +255,7 @@ struct TodaysSnapshotScrollView: View {
     
     // MARK: - Snapshot Unit
     
-    private func snapshotUnit(title: String, bodyText: String, image1: String = "pantone_1", image2: String = "pantone_2") -> some View {
+    private func snapshotUnit(unitId: Int, title: String, bodyText: String, image1: String = "pantone_1", image2: String = "pantone_2") -> some View {
         VStack(spacing: 0) {
             // Unit Header with emoji + title + 3-dot menu
             FDSUnitHeader(
@@ -291,39 +297,72 @@ struct TodaysSnapshotScrollView: View {
                 .padding(.horizontal, 12)
                 .padding(.bottom, 8)
             
-            // Row of 2 Posts (8px gap)
-            HStack(spacing: 8) {
-                // Post 1
-                Button(action: {
-                    selectedVideoName = "dance"
-                    showVideoPlayer = true
-                }) {
-                    placeholderPostCard(imageName: image1)
-                        .frame(maxWidth: .infinity)
+            // Row of Posts - 2x1 by default, 2x2 when expanded
+            VStack(spacing: 8) {
+                // First Row (always visible)
+                HStack(spacing: 8) {
+                    // Post 1
+                    Button(action: {
+                        selectedVideoName = "dance"
+                        showVideoPlayer = true
+                    }) {
+                        placeholderPostCard(imageName: image1)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    // Post 2
+                    Button(action: {
+                        selectedVideoName = "dance"
+                        showVideoPlayer = true
+                    }) {
+                        placeholderPostCard(imageName: image2)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
-                .buttonStyle(PlainButtonStyle())
                 
-                // Post 2
-                Button(action: {
-                    selectedVideoName = "dance"
-                    showVideoPlayer = true
-                }) {
-                    placeholderPostCard(imageName: image2)
-                        .frame(maxWidth: .infinity)
+                // Second Row (visible when expanded)
+                if expandedUnits[unitId] == true {
+                    HStack(spacing: 8) {
+                        // Post 3
+                        Button(action: {
+                            selectedVideoName = "dance"
+                            showVideoPlayer = true
+                        }) {
+                            placeholderPostCard(imageName: image1)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        // Post 4
+                        Button(action: {
+                            selectedVideoName = "dance"
+                            showVideoPlayer = true
+                        }) {
+                            placeholderPostCard(imageName: image2)
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                    }
+                    .transition(.opacity.combined(with: .move(edge: .top)))
                 }
-                .buttonStyle(PlainButtonStyle())
             }
             .padding(.horizontal, 12)
             .padding(.bottom, 8)
             
-            // "See more" Button
-            Button(action: {}) {
+            // "See more" / "See less" Button
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    expandedUnits[unitId] = !(expandedUnits[unitId] ?? false)
+                }
+            }) {
                 HStack(spacing: 4) {
-                    Text("See more")
+                    Text(expandedUnits[unitId] == true ? "See less" : "See more")
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundColor(Color("secondaryText"))
                     
-                    Image(systemName: "chevron.down")
+                    Image(systemName: expandedUnits[unitId] == true ? "chevron.up" : "chevron.down")
                         .font(.system(size: 12))
                         .foregroundColor(Color("secondaryText"))
                 }
