@@ -44,12 +44,8 @@ struct TodaysSnapshotScrollView: View {
                             highlightsSection(proxy: proxy)
                                 .id("highlights")
                             
-                            // Red VStack Unit
-                            VStack {
-                                
-                            }
-                            .frame(width: 375, height: 300)
-                            .background(Color.red)
+                        // Snapshot Unit
+                        snapshotUnit()
                             
                             // Next sections will go here
                             // Story sections .id("story-1"), .id("story-2"), etc.
@@ -157,6 +153,159 @@ struct TodaysSnapshotScrollView: View {
         .padding(.bottom, 20)
         .padding(.horizontal, 12)
         .background(Color("bottomSheetBackgroundDeemphasized"))  // Gray background F2F4F7
+    }
+    
+    // MARK: - Snapshot Unit
+    
+    private func snapshotUnit() -> some View {
+        VStack(spacing: 0) {
+            // Unit Header with emoji + title + 3-dot menu
+            FDSUnitHeader(
+                headlineText: "🎨 Pantone's color of the year",
+                hierarchyLevel: .level3,
+                rightAddOn: .iconButton(
+                    icon: "dots-3-horizontal-filled",
+                    action: {},
+                    isDisabled: false
+                )
+            )
+            
+            // Body Text
+            Text("Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design.")
+                .font(.system(size: 15))
+                .lineSpacing(5) // 20px line-height
+                .foregroundColor(Color("primaryText"))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 12)
+            
+            // "Sources" Action Chip
+            HStack {
+                FDSActionChip(
+                    size: .small,
+                    label: "Sources",
+                    isMenu: false,
+                    action: {}
+                )
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 12)
+            
+            // "More about this" Heading
+            Text("More about this")
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(Color("primaryText"))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 8)
+            
+            // Row of 2 Posts (8px gap)
+            HStack(spacing: 8) {
+                // Post 1
+                placeholderPostCard()
+                
+                // Post 2
+                placeholderPostCard()
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 8)
+            
+            // "See more" Button
+            Button(action: {}) {
+                HStack(spacing: 4) {
+                    Text("See more")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(Color("secondaryText"))
+                    
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 12))
+                        .foregroundColor(Color("secondaryText"))
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 32)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            
+            // Footer Action Chips (thumbs up/down)
+            HStack(spacing: 8) {
+                FDSActionChip(
+                    size: .large,
+                    label: "",
+                    leftAddOn: .icon("hand-thumbs-up-outline"),
+                    action: {}
+                )
+                
+                FDSActionChip(
+                    size: .large,
+                    label: "",
+                    leftAddOn: .icon("hand-thumbs-down-outline"),
+                    action: {}
+                )
+                
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 12)
+        }
+        .background(Color("cardBackground"))  // White background
+    }
+    
+    // MARK: - Placeholder Post Card
+    
+    private func placeholderPostCard() -> some View {
+        VStack(spacing: 0) {
+            // Post Header
+            HStack(spacing: 8) {
+                Image("pantone_1")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 20, height: 20)
+                    .clipShape(Circle())
+                
+                Text("Becker Threads")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Color("primaryText"))
+                
+                Spacer()
+            }
+            .padding(12)
+            
+            // Media placeholder (grey box with Pantone text)
+            ZStack {
+                Color.gray.opacity(0.2)
+                
+                VStack {
+                    Spacer()
+                    Text("PANTONE®\nPQ-11-4201TCX")
+                        .font(.system(size: 14, weight: .bold))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.black)
+                        .padding(.bottom, 40)
+                }
+            }
+            .frame(height: 150)
+            .clipped()
+            
+            // Reactions (simplified)
+            HStack {
+                Text("42")
+                    .font(.system(size: 13))
+                    .foregroundColor(Color("secondaryText"))
+                Spacer()
+                Text("13")
+                    .font(.system(size: 13))
+                    .foregroundColor(Color("secondaryText"))
+            }
+            .padding(12)
+        }
+        .background(Color("cardBackground"))
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color("borderUiEmphasis"), lineWidth: 1)
+        )
     }
     
     // MARK: - Highlight List Item
