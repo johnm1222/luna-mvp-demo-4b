@@ -513,19 +513,53 @@ struct SimpleVideoPlayerView: View {
     @Binding var isPresented: Bool
     @State private var isPlaying = true
     @State private var player: AVPlayer?
+    @State private var isLiked = false
+    @State private var likeCount = 342
+    @State private var isCaptionExpanded = false
     
     var body: some View {
         ZStack {
-            // Video Player
-            if let player = player {
-                VideoPlayer(player: player)
-                    .ignoresSafeArea()
-                    .onAppear {
-                        player.play()
+            // Video Player Base
+            ZStack {
+                if let player = player {
+                    VideoPlayer(player: player)
+                        .ignoresSafeArea()
+                        .onAppear {
+                            player.play()
+                        }
+                        .onDisappear {
+                            player.pause()
+                        }
+                }
+                
+                // Content Protection Gradient
+                VStack(spacing: 0) {
+                    Spacer()
+                    LinearGradient(
+                        stops: [
+                            .init(color: Color("overlayOnMediaLight").opacity(0.0), location: 0.0),
+                            .init(color: Color("overlayOnMediaLight").opacity(0.1), location: 0.2),
+                            .init(color: Color("overlayOnMediaLight").opacity(0.4), location: 0.5),
+                            .init(color: Color("overlayOnMediaLight").opacity(0.8), location: 0.8),
+                            .init(color: Color("overlayOnMediaLight").opacity(1.0), location: 1.0)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 260)
+                    .allowsHitTesting(false)
+                }
+                .ignoresSafeArea(.all)
+            }
+            .onTapGesture {
+                withAnimation {
+                    isPlaying.toggle()
+                    if isPlaying {
+                        player?.play()
+                    } else {
+                        player?.pause()
                     }
-                    .onDisappear {
-                        player.pause()
-                    }
+                }
             }
             
             // Back Button (Top Left)
@@ -547,6 +581,109 @@ struct SimpleVideoPlayerView: View {
                     Spacer()
                 }
                 Spacer()
+            }
+            
+            // Bottom UI Chrome
+            VStack {
+                Spacer()
+                
+                HStack(alignment: .bottom, spacing: 12) {
+                    // Left side: Profile + Caption
+                    VStack(alignment: .leading, spacing: 12) {
+                        // Profile Section
+                        HStack(alignment: .center, spacing: 8) {
+                            Image("pantone_1")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 32, height: 32)
+                                .clipShape(Circle())
+                            
+                            VStack(alignment: .leading, spacing: 10) {
+                                HStack(alignment: .center, spacing: 4) {
+                                    Text("Becker Threads")
+                                        .font(.system(size: 15, weight: .semibold))
+                                        .foregroundStyle(Color.white)
+                                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                    
+                                    Text("·")
+                                        .font(.system(size: 15, weight: .semibold))
+                                        .foregroundStyle(Color.white)
+                                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                    
+                                    Button {
+                                    } label: {
+                                        Text("Follow")
+                                            .font(.system(size: 15, weight: .semibold))
+                                            .foregroundStyle(Color.white)
+                                            .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                    }
+                                }
+                                
+                                // Music Info
+                                HStack(spacing: 4) {
+                                    Image("music-filled")
+                                        .resizable()
+                                        .frame(width: 12, height: 12)
+                                        .foregroundStyle(Color.white.opacity(0.8))
+                                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                    
+                                    Text("Original audio · Becker Threads")
+                                        .font(.system(size: 13))
+                                        .foregroundStyle(Color.white.opacity(0.8))
+                                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                        .lineLimit(1)
+                                }
+                            }
+                            Spacer()
+                        }
+                        
+                        // Caption
+                        Text("Cloud Dancer by Pantone - the 2026 Color of the Year 🎨")
+                            .font(.system(size: 15))
+                            .foregroundStyle(Color.white)
+                            .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                            .lineLimit(isCaptionExpanded ? nil : 1)
+                            .truncationMode(.tail)
+                            .onTapGesture {
+                                isCaptionExpanded.toggle()
+                            }
+                    }
+                    
+                    // Right side: Vertical UFI Buttons
+                    VStack(spacing: 0) {
+                        ReelUFIButton(
+                            icon: "like-outline",
+                            likedIcon: "like",
+                            count: likeCount.formattedString,
+                            isLiked: $isLiked,
+                            likeCount: $likeCount
+                        )
+                        ReelUFIButton(icon: "comment-outline", count: "127")
+                        ReelUFIButton(icon: "share-outline", count: "42")
+                        ReelUFIButton(icon: "bookmark-outline", count: "Save")
+                        ReelUFIButton(icon: "dots-3-horizontal-outline", count: nil)
+                    }
+                }
+                .padding(.leading, 12)
+                .padding(.trailing, 12)
+                .padding(.bottom, 32)
+            }
+            
+            // Play/Pause Controls (centered)
+            if !isPlaying {
+                Button {
+                    isPlaying = true
+                    player?.play()
+                } label: {
+                    Image(systemName: "play.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 32, height: 32)
+                        .foregroundStyle(Color.white)
+                        .frame(width: 64, height: 64)
+                        .background(Color.black.opacity(0.3))
+                        .clipShape(Circle())
+                }
             }
         }
         .onAppear {
@@ -572,6 +709,77 @@ struct SimpleVideoPlayerView: View {
         ) { _ in
             player?.seek(to: .zero)
             player?.play()
+        }
+    }
+}
+
+// MARK: - Reel UFI Button
+
+struct ReelUFIButton: View {
+    let icon: String
+    var likedIcon: String? = nil
+    var count: String? = nil
+    @Binding var isLiked: Bool
+    @Binding var likeCount: Int
+    
+    // Regular action button
+    init(icon: String, count: String? = nil) {
+        self.icon = icon
+        self.likedIcon = nil
+        self.count = count
+        self._isLiked = .constant(false)
+        self._likeCount = .constant(0)
+    }
+    
+    // Like button
+    init(icon: String, likedIcon: String, count: String, isLiked: Binding<Bool>, likeCount: Binding<Int>) {
+        self.icon = icon
+        self.likedIcon = likedIcon
+        self.count = count
+        self._isLiked = isLiked
+        self._likeCount = likeCount
+    }
+    
+    var body: some View {
+        Button {
+            if likedIcon != nil {
+                withAnimation {
+                    isLiked.toggle()
+                    likeCount += isLiked ? 1 : -1
+                }
+            }
+        } label: {
+            VStack(spacing: 8) {
+                Image(isLiked && likedIcon != nil ? likedIcon! : icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(isLiked && likedIcon != nil ? Color("like") : Color.white)
+                    .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                
+                if let count = count {
+                    Text(count)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.white)
+                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                }
+            }
+            .frame(width: 48)
+        }
+        .padding(.bottom, 16)
+    }
+}
+
+// MARK: - Int Extension for Formatted Strings
+
+extension Int {
+    var formattedString: String {
+        if self >= 1_000_000 {
+            return String(format: "%.1fM", Double(self) / 1_000_000.0)
+        } else if self >= 1_000 {
+            return String(format: "%.1fK", Double(self) / 1_000.0)
+        } else {
+            return "\(self)"
         }
     }
 }
