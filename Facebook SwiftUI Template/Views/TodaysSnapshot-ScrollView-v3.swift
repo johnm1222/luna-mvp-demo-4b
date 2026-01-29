@@ -57,6 +57,10 @@ struct TodaysSnapshotScrollView: View {
                                     unitId: 1,
                                     title: "🎨 Pantone's color of the year",
                                     bodyText: "Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design.",
+                                    image1: "pantone",
+                                    image2: "pantone-1",
+                                    image3: "pantone-2",
+                                    image4: "pantone-3",
                                     usernames: ["Design Weekly", "Color Trends", "Studio Palette", "Creative Space"]
                                 )
                                 .id("snapshot-1")
