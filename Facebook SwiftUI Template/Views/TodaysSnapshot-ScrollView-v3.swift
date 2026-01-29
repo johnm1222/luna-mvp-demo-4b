@@ -1014,91 +1014,6 @@ struct SimpleVideoPlayerView: View {
             player?.play()
         }
     }
-}
-
-// MARK: - Reel UFI Button
-
-struct ReelUFIButton: View {
-    private enum ButtonType {
-        case action(icon: String, count: String?, action: () -> Void)
-        case like(icon: String, likedIcon: String, isLiked: Binding<Bool>, likeCount: Binding<Int>)
-    }
-    
-    private let buttonType: ButtonType
-    @State private var isPressed = false
-    
-    init(icon: String, count: String? = nil, action: @escaping () -> Void = {}) {
-        self.buttonType = .action(icon: icon, count: count, action: action)
-    }
-    
-    init(icon: String, likedIcon: String, count: String, isLiked: Binding<Bool>, likeCount: Binding<Int>) {
-        self.buttonType = .like(icon: icon, likedIcon: likedIcon, isLiked: isLiked, likeCount: likeCount)
-    }
-    
-    var body: some View {
-        Button {
-            switch buttonType {
-            case .action(_, _, let action):
-                action()
-            case .like(_, _, let isLiked, let likeCount):
-                withAnimation {
-                    isLiked.wrappedValue.toggle()
-                    likeCount.wrappedValue += isLiked.wrappedValue ? 1 : -1
-                }
-            }
-        } label: {
-            VStack(spacing: 8) {
-                switch buttonType {
-                case .action(let icon, let count, _):
-                    Image(icon)
-                        .renderingMode(.template)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                        .foregroundStyle(Color("primaryIconOnMedia"))
-                        .iconOnMediaShadow()
-                    
-                    if let count = count {
-                        Text(count)
-                            .meta4LinkTypography()
-                            .foregroundStyle(Color("primaryTextOnMedia"))
-                            .textOnMediaShadow()
-                    }
-                    
-                case .like(let icon, let likedIcon, let isLiked, let likeCount):
-                    let currentIcon = isLiked.wrappedValue ? likedIcon : icon
-                    
-                    Image(currentIcon)
-                        .renderingMode(isLiked.wrappedValue ? .original : .template)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                        .foregroundStyle(isLiked.wrappedValue ? Color.clear : Color("primaryIconOnMedia"))
-                        .scaleEffect(isLiked.wrappedValue ? 1.2 : 1.0)
-                        .iconOnMediaShadow()
-                    
-                    Text(likeCount.wrappedValue.formattedString)
-                        .meta4LinkTypography()
-                        .foregroundStyle(Color("primaryTextOnMedia"))
-                        .textOnMediaShadow()
-                }
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color("mediaPressed"))
-                    .frame(maxWidth: 48)
-                    .opacity(isPressed ? 1.0 : 0.0)
-            )
-        }
-        .buttonStyle(.plain)
-        .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
-            withAnimation {
-                isPressed = pressing
-            }
-        }, perform: {})
-    }
     
     // MARK: - Sources Bottom Sheet
     
@@ -1219,6 +1134,91 @@ struct ReelUFIButton: View {
         default:
             return []
         }
+    }
+}
+
+// MARK: - Reel UFI Button
+
+struct ReelUFIButton: View {
+    private enum ButtonType {
+        case action(icon: String, count: String?, action: () -> Void)
+        case like(icon: String, likedIcon: String, isLiked: Binding<Bool>, likeCount: Binding<Int>)
+    }
+    
+    private let buttonType: ButtonType
+    @State private var isPressed = false
+    
+    init(icon: String, count: String? = nil, action: @escaping () -> Void = {}) {
+        self.buttonType = .action(icon: icon, count: count, action: action)
+    }
+    
+    init(icon: String, likedIcon: String, count: String, isLiked: Binding<Bool>, likeCount: Binding<Int>) {
+        self.buttonType = .like(icon: icon, likedIcon: likedIcon, isLiked: isLiked, likeCount: likeCount)
+    }
+    
+    var body: some View {
+        Button {
+            switch buttonType {
+            case .action(_, _, let action):
+                action()
+            case .like(_, _, let isLiked, let likeCount):
+                withAnimation {
+                    isLiked.wrappedValue.toggle()
+                    likeCount.wrappedValue += isLiked.wrappedValue ? 1 : -1
+                }
+            }
+        } label: {
+            VStack(spacing: 8) {
+                switch buttonType {
+                case .action(let icon, let count, _):
+                    Image(icon)
+                        .renderingMode(.template)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                        .foregroundStyle(Color("primaryIconOnMedia"))
+                        .iconOnMediaShadow()
+                    
+                    if let count = count {
+                        Text(count)
+                            .meta4LinkTypography()
+                            .foregroundStyle(Color("primaryTextOnMedia"))
+                            .textOnMediaShadow()
+                    }
+                    
+                case .like(let icon, let likedIcon, let isLiked, let likeCount):
+                    let currentIcon = isLiked.wrappedValue ? likedIcon : icon
+                    
+                    Image(currentIcon)
+                        .renderingMode(isLiked.wrappedValue ? .original : .template)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                        .foregroundStyle(isLiked.wrappedValue ? Color.clear : Color("primaryIconOnMedia"))
+                        .scaleEffect(isLiked.wrappedValue ? 1.2 : 1.0)
+                        .iconOnMediaShadow()
+                    
+                    Text(likeCount.wrappedValue.formattedString)
+                        .meta4LinkTypography()
+                        .foregroundStyle(Color("primaryTextOnMedia"))
+                        .textOnMediaShadow()
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color("mediaPressed"))
+                    .frame(maxWidth: 48)
+                    .opacity(isPressed ? 1.0 : 0.0)
+            )
+        }
+        .buttonStyle(.plain)
+        .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
+            withAnimation {
+                isPressed = pressing
+            }
+        }, perform: {})
     }
 }
 
