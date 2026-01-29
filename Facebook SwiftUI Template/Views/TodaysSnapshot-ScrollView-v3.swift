@@ -586,9 +586,8 @@ struct TodaysSnapshotScrollView: View {
         // Prevent multiple snaps in quick succession
         guard !hasSnapped else { return }
         
-        // Don't snap if we're beyond the last focus position + threshold (allow free scrolling at bottom)
-        let lastFocusPosition: CGFloat = 2956
-        if newOffset > lastFocusPosition + snapThreshold {
+        // Don't snap if we're beyond 2958 (allow free scrolling at bottom)
+        if newOffset > 2958 {
             return
         }
         
