@@ -51,30 +51,35 @@ struct TodaysSnapshotScrollView: View {
                                     title: "🎨 Pantone's color of the year",
                                     bodyText: "Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design."
                                 )
+                                .id("snapshot-1")
                                 
                                 // 2. Jokic MVP race lead
                                 snapshotUnit(
                                     title: "🏀 Jokic MVP race lead",
                                     bodyText: "Even with limited availability during brief injury absences, Jokic's overall impact continues to separate him from other contenders. His efficiency, playmaking, and on-court control remain central to Denver's success, reinforcing his value beyond raw scoring totals."
                                 )
+                                .id("snapshot-2")
                                 
                                 // 3. Children Museum Winter Programs
                                 snapshotUnit(
                                     title: "❄️ Children Museum Winter Programs",
                                     bodyText: "New program focused on movement, sensory play, and early learning experiences designed for colder months. Sessions are structured with shorter time blocks and caregiver-friendly pacing, making them accessible for younger age groups. Registration is now open."
                                 )
+                                .id("snapshot-3")
                                 
                                 // 4. High Protein Toddler Snacks
                                 snapshotUnit(
                                     title: "🥣 High Protein Toddler Snacks",
                                     bodyText: "Nutrition experts suggest adding ingredients like hemp hearts, peanut butter, or cottage cheese to familiar snacks. These additions help support healthy growth without requiring complex meal prep. Hemp hearts are especially notable as a complete protein, containing all nine essential amino acids."
                                 )
+                                .id("snapshot-4")
                                 
                                 // 5. Denver Restaurant Week
                                 snapshotUnit(
                                     title: "🍣 Denver Restaurant Week",
                                     bodyText: "The annual event features multi-course menus at set price tiers, giving diners a chance to try new restaurants at a lower cost. Participating spots span downtown, RiNo, LoHi, and neighborhood corridors across the metro area. Reservations tend to book early for higher-profile restaurants."
                                 )
+                                .id("snapshot-5")
                             }
                             .background(Color(hex: "C9CCD1"))
                             
@@ -328,7 +333,7 @@ struct TodaysSnapshotScrollView: View {
         // Body Outer Container: 8px top/bottom, 0px left/right
         Button(action: {
             withAnimation {
-                proxy.scrollTo("story-\(index + 1)", anchor: .top)
+                proxy.scrollTo("snapshot-\(index + 1)", anchor: .top)
             }
         }) {
             // ContentRightAddon: 12px left/right, 0px top/bottom, 12px gap between children
