@@ -39,6 +39,7 @@ struct FDSActionChip: View {
     let leftAddOn: FDSActionChipLeftAddOnType?
     let isMenu: Bool
     let isEmphasized: Bool
+    let customColor: Color?
     let action: () -> Void
     
     // MARK: - Initializer
@@ -50,6 +51,7 @@ struct FDSActionChip: View {
         leftAddOn: FDSActionChipLeftAddOnType? = nil,
         isMenu: Bool = false,
         isEmphasized: Bool = false,
+        customColor: Color? = nil,
         action: @escaping () -> Void
     ) {
         self.surface = surface
@@ -59,6 +61,7 @@ struct FDSActionChip: View {
         self.leftAddOn = leftAddOn
         self.isMenu = isMenu
         self.isEmphasized = isEmphasized
+        self.customColor = customColor
         self.action = action
     }
     
@@ -234,6 +237,11 @@ struct FDSActionChip: View {
     }
     
     private var textColor: Color {
+        // Use custom color if provided
+        if let customColor = customColor {
+            return customColor
+        }
+        
         switch surface {
         case .surface:
             switch type {
@@ -262,6 +270,11 @@ struct FDSActionChip: View {
     }
     
     private var iconColor: Color {
+        // Use custom color if provided
+        if let customColor = customColor {
+            return customColor
+        }
+        
         switch surface {
         case .surface:
             switch type {

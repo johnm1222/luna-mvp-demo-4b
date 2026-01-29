@@ -120,6 +120,7 @@ struct TodaysSnapshotScrollView: View {
                                 size: .medium,
                                 label: "Explore Today's snapshot",
                                 leftAddOn: .icon("arrow-down-outline"),
+                                customColor: Color("accentColor"),
                                 action: {
                                     withAnimation(.easeInOut(duration: 0.45)) {
                                         proxy.scrollTo("snapshot-1", anchor: .top)
