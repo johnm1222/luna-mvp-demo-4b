@@ -132,6 +132,7 @@ struct TodaysSnapshotScrollView: View {
                 .allowsHitTesting(true)
             }
             .navigationBarHidden(true)
+        }
     }
     
     // MARK: - Header Section
