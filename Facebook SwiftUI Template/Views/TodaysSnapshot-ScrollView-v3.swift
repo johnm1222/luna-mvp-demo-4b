@@ -770,20 +770,6 @@ struct ReelUFIButton: View {
     }
 }
 
-// MARK: - Int Extension for Formatted Strings
-
-extension Int {
-    var formattedString: String {
-        if self >= 1_000_000 {
-            return String(format: "%.1fM", Double(self) / 1_000_000.0)
-        } else if self >= 1_000 {
-            return String(format: "%.1fK", Double(self) / 1_000.0)
-        } else {
-            return "\(self)"
-        }
-    }
-}
-
 #Preview {
     NavigationStack {
         TodaysSnapshotScrollView()
