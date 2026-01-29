@@ -11,16 +11,16 @@ struct TodaysSnapshotScrollView: View {
     private let showScrollDebug = true
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            // Main Content Layer
-            VStack(spacing: 0) {
-                // Navigation Bar (fixed at top)
-                FDSNavigationBarCentered(
-                    backAction: { dismiss() }
-                )
-                
-                // Main Scrollable Content with Anchors
-                ScrollViewReader { proxy in
+        // Main Scrollable Content with Anchors
+        ScrollViewReader { proxy in
+            ZStack(alignment: .topLeading) {
+                // Main Content Layer
+                VStack(spacing: 0) {
+                    // Navigation Bar (fixed at top)
+                    FDSNavigationBarCentered(
+                        backAction: { dismiss() }
+                    )
+                    
                     ScrollView {
                         VStack(spacing: 0) {
                             // Header Section
@@ -107,8 +107,28 @@ struct TodaysSnapshotScrollView: View {
                     .padding(.top, 8)
                     .allowsHitTesting(false)
             }
+            
+            // Floating Action Button (Bottom Layer)
+            VStack {
+                Spacer()
+                
+                FDSActionChip(
+                    size: .medium,
+                    label: "Explore Today's snapshot",
+                    leftAddOn: .icon("arrow-down-outline"),
+                    action: {
+                        withAnimation(.easeInOut(duration: 0.45)) {
+                            proxy.scrollTo("snapshot-1", anchor: .top)
+                        }
+                    }
+                )
+                .shadow(color: Color.black.opacity(0.1), radius: 16, x: 0, y: 2)
+            }
+            .padding(.bottom, 24)
+            .frame(maxWidth: .infinity)
         }
         .navigationBarHidden(true)
+        }
     }
     
     // MARK: - Header Section
