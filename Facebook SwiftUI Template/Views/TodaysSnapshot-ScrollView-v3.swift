@@ -26,7 +26,7 @@ struct TodaysSnapshotScrollView: View {
     private let snapThreshold: CGFloat = 280
     
     // DEBUG: Toggle this to show/hide scroll position indicator
-    private let showScrollDebug = true
+    private let showScrollDebug = false
     
     var body: some View {
         // Main Scrollable Content with Anchors
