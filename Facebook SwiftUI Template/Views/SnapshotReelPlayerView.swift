@@ -4,7 +4,7 @@ import AVFoundation
 
 // MARK: - Snapshot Reel Player View (Exact ReelsTabView Structure)
 // This is the EXACT structure from ReelsTabView.swift in facebook-template-v0.4
-// Modified only to show a single reel and include a back button
+// Modified to show multiple snapshot reels and include a back button
 
 struct SnapshotReelPlayerView: View {
     let videoName: String
@@ -13,20 +13,70 @@ struct SnapshotReelPlayerView: View {
     @State private var is2xSpeed = false
     @StateObject private var tabBarHelper = FDSTabBarHelper()
     
-    // Create the single reel to display
-    private var snapshotReel: FacebookReel {
-        FacebookReel(
-            id: "snapshot",
-            username: "Becker Threads",
-            profileImage: "pantone_1",
-            caption: "Cloud Dancer by Pantone - the 2026 Color of the Year 🎨",
-            timeAgo: "now",
-            likes: 342,
-            comments: 127,
-            shares: 42,
-            videoFileName: videoName,
-            verified: false
-        )
+    // Create multiple snapshot reels to swipe through
+    private var snapshotReels: [FacebookReel] {
+        [
+            FacebookReel(
+                id: "snapshot1",
+                username: "Becker Threads",
+                profileImage: "pantone_1",
+                caption: "Cloud Dancer by Pantone - the 2026 Color of the Year 🎨",
+                timeAgo: "now",
+                likes: 342,
+                comments: 127,
+                shares: 42,
+                videoFileName: "dance",
+                verified: false
+            ),
+            FacebookReel(
+                id: "snapshot2",
+                username: "Denver Nuggets",
+                profileImage: "nba_1",
+                caption: "Jokic continues to dominate the MVP race 🏀",
+                timeAgo: "2h",
+                likes: 1240,
+                comments: 256,
+                shares: 89,
+                videoFileName: "surf",
+                verified: true
+            ),
+            FacebookReel(
+                id: "snapshot3",
+                username: "Children's Museum",
+                profileImage: "winter1",
+                caption: "Winter programs now open for registration ❄️",
+                timeAgo: "4h",
+                likes: 567,
+                comments: 89,
+                shares: 34,
+                videoFileName: "dancing",
+                verified: false
+            ),
+            FacebookReel(
+                id: "snapshot4",
+                username: "Healthy Kids",
+                profileImage: "ffmeal_1",
+                caption: "High protein toddler snacks for busy parents 🥣",
+                timeAgo: "6h",
+                likes: 892,
+                comments: 145,
+                shares: 67,
+                videoFileName: "handsin",
+                verified: false
+            ),
+            FacebookReel(
+                id: "snapshot5",
+                username: "Denver Eats",
+                profileImage: "denver1",
+                caption: "Restaurant Week is here! Check out these amazing spots 🍣",
+                timeAgo: "8h",
+                likes: 1456,
+                comments: 234,
+                shares: 123,
+                videoFileName: "ocean",
+                verified: true
+            )
+        ]
     }
     
     var body: some View {
@@ -35,16 +85,18 @@ struct SnapshotReelPlayerView: View {
                 ZStack {
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVStack(spacing: 0) {
-                            ReelVideoPlayer(
-                                reel: snapshotReel,
-                                reelIndex: 0,
-                                isCurrentReel: currentReelIndex == 0,
-                                bottomInset: 80,
-                                is2xSpeed: $is2xSpeed
-                            )
-                            .containerRelativeFrame([.horizontal, .vertical])
-                            .clipped()
-                            .id(0)
+                            ForEach(0..<snapshotReels.count, id: \.self) { index in
+                                ReelVideoPlayer(
+                                    reel: snapshotReels[index],
+                                    reelIndex: index,
+                                    isCurrentReel: currentReelIndex == index,
+                                    bottomInset: 80,
+                                    is2xSpeed: $is2xSpeed
+                                )
+                                .containerRelativeFrame([.horizontal, .vertical])
+                                .clipped()
+                                .id(index)
+                            }
                         }
                         .scrollTargetLayout()
                     }
@@ -98,6 +150,9 @@ struct SnapshotReelPlayerView: View {
                     }
                     .ignoresSafeArea(.all, edges: .top)
                 }
+            }
+            .onChange(of: currentReelIndex) { _, newIndex in
+                tabBarHelper.currentReelIndex = newIndex
             }
             .onAppear {
                 tabBarHelper.currentReelIndex = currentReelIndex
