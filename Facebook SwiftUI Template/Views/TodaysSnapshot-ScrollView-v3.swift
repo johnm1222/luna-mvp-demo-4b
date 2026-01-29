@@ -92,6 +92,10 @@ struct TodaysSnapshotScrollView: View {
                                     unitId: 4,
                                     title: "🥣 High Protein Toddler Snacks",
                                     bodyText: "Nutrition experts suggest adding ingredients like hemp hearts, peanut butter, or cottage cheese to familiar snacks. These additions help support healthy growth without requiring complex meal prep. Hemp hearts are especially notable as a complete protein, containing all nine essential amino acids.",
+                                    image1: "toddler",
+                                    image2: "toddler-1",
+                                    image3: "toddler-2",
+                                    image4: "toddler-3",
                                     usernames: ["Healthy Kids", "Parent Nutrition", "Toddler Meals", "Smart Snacks"]
                                 )
                                 .id("snapshot-4")
