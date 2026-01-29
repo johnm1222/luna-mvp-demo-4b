@@ -274,10 +274,7 @@ struct TodaysSnapshotScrollView: View {
                 Text("Becker Threads")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(.white)
-                    .shadow(color: Color.black.opacity(0.6), radius: 1.5, x: 0, y: 0)
-                    .shadow(color: Color.black.opacity(0.4), radius: 1.25, x: 0, y: 0)
-                    .shadow(color: Color.black.opacity(0.5), radius: 1, x: 0, y: 0)
-                    .shadow(color: Color.black, radius: 0.5, x: 0, y: 0)
+                    .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
                 
                 Spacer()
             }
