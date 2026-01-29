@@ -226,6 +226,14 @@ struct TodaysSnapshotScrollView: View {
                             showSourcesSheet = nil
                         }
                     
+                    // Bottom mask frame (covers content behind bottom sheet)
+                    VStack {
+                        Spacer()
+                        Color(hex: "F0F2F5")
+                            .frame(height: 100)
+                            .ignoresSafeArea(edges: .bottom)
+                    }
+                    
                     // Sources Bottom Sheet
                     VStack {
                         Spacer()
