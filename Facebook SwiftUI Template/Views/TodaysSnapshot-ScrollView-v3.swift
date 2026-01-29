@@ -14,49 +14,50 @@ struct TodaysSnapshotScrollView: View {
         ZStack(alignment: .topLeading) {
             // Main Content Layer
             VStack(spacing: 0) {
-            // Navigation Bar (fixed at top)
-            FDSNavigationBarCentered(
-                backAction: { dismiss() }
-            )
-            
-            // Main Scrollable Content with Anchors
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(spacing: 0) {
-                        // Header Section
-                        headerSection
-                            .id("header")
-                            .background(
-                                GeometryReader { geo in
-                                    Color.clear
-                                        .onChange(of: geo.frame(in: .global).minY) { oldValue, newValue in
-                                            // Set initial position once when first measured
-                                            if initialY == 0 {
-                                                initialY = newValue
+                // Navigation Bar (fixed at top)
+                FDSNavigationBarCentered(
+                    backAction: { dismiss() }
+                )
+                
+                // Main Scrollable Content with Anchors
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            // Header Section
+                            headerSection
+                                .id("header")
+                                .background(
+                                    GeometryReader { geo in
+                                        Color.clear
+                                            .onChange(of: geo.frame(in: .global).minY) { oldValue, newValue in
+                                                // Set initial position once when first measured
+                                                if initialY == 0 {
+                                                    initialY = newValue
+                                                }
+                                                // Calculate scroll: 0 at top, increases as you scroll down
+                                                scrollOffset = max(0, initialY - newValue)
                                             }
-                                            // Calculate scroll: 0 at top, increases as you scroll down
-                                            scrollOffset = max(0, initialY - newValue)
-                                        }
-                                }
-                            )
-                        
-                        // Highlights Section
-                        highlightsSection(proxy: proxy)
-                            .id("highlights")
-                        
-                        // Red VStack Unit
-                        VStack {
+                                    }
+                                )
                             
+                            // Highlights Section
+                            highlightsSection(proxy: proxy)
+                                .id("highlights")
+                            
+                            // Red VStack Unit
+                            VStack {
+                                
+                            }
+                            .frame(width: 375, height: 300)
+                            .background(Color.red)
+                            
+                            // Next sections will go here
+                            // Story sections .id("story-1"), .id("story-2"), etc.
+                            
+                            // Temporary spacing
+                            Color.clear
+                                .frame(height: 500)
                         }
-                        .frame(width: 375, height: 300)
-                        .background(Color.red)
-                        
-                        // Next sections will go here
-                        // Story sections .id("story-1"), .id("story-2"), etc.
-                        
-                        // Temporary spacing
-                        Color.clear
-                            .frame(height: 500)
                     }
                 }
             }
