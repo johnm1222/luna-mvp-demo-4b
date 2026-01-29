@@ -419,7 +419,7 @@ struct TodaysSnapshotScrollView: View {
             Image(imageName)
                 .resizable()
                 .scaledToFill()
-                .frame(height: 259.571)
+                .frame(width: 172, height: 259.571)
                 .clipped()
             
             // Top Layer: Header with text shadow for readability
