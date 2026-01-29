@@ -117,10 +117,6 @@ struct TodaysSnapshotScrollView: View {
                                 )
                                 .id("snapshot-5")
                                 
-                                // 4px gap before footer
-                                Color(hex: "C9CCD1")
-                                    .frame(height: 4)
-                                
                                 // Footer Unit (End of scroll)
                                 footerSection
                                     .id("footer")
