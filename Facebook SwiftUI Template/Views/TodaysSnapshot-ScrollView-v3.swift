@@ -519,27 +519,27 @@ private let highlightItems: [HighlightItem] = [
     HighlightItem(
         title: "Pantone's Color of the Year",
         body: "for 2026, Cloud Dancer, emphasizes connection, adaptability, and optimism.",
-        profileImage: "pantone_1"
+        profileImage: "pantone"
     ),
     HighlightItem(
         title: "Jokic MVP race lead",
         body: "holds despite missed games, keeping league-wide debate intense through the midseason stretch.",
-        profileImage: "jokic_1"
+        profileImage: "nba_1"
     ),
     HighlightItem(
         title: "Children Museum Winter Programs",
         body: "expansion adds new hands-on activities for toddlers and young children.",
-        profileImage: "winter1"
+        profileImage: "WInterKids"
     ),
     HighlightItem(
         title: "High protein toddler snacks",
         body: "can be easily upgraded using simple pantry additions recommended by dietitians.",
-        profileImage: "ffmeal_1"
+        profileImage: "toddler"
     ),
     HighlightItem(
         title: "Denver Restaurant Week Dates",
         body: "were announced, featuring prix-fixe menus at 300+ restaurants.",
-        profileImage: "denver1"
+        profileImage: "DenverRestaruant"
     )
 ]
 
