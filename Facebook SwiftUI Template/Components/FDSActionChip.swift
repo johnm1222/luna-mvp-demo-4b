@@ -67,30 +67,39 @@ struct FDSActionChip: View {
         Button(action: {
             action()
         }) {
-            HStack(spacing: 6) {
-                // Left Add-On
-                if let leftAddOn = leftAddOn {
-                    leftAddOnView(leftAddOn)
-                }
-                
-                // Label
-                textWithTypography(label)
-                    .foregroundStyle(textColor)
-                    .lineLimit(1)
-                
-                // Menu Icon
-                if isMenu {
-                    Image("triangle-down-filled")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(textColor)
-                        .frame(width: menuIconSize, height: menuIconSize)
+            Group {
+                if label.isEmpty && leftAddOn != nil && !isMenu {
+                    // Icon-only button: perfectly centered
+                    leftAddOnView(leftAddOn!)
+                        .frame(width: minWidth, height: minHeight, alignment: .center)
+                } else {
+                    // Regular button with label/menu
+                    HStack(spacing: 6) {
+                        // Left Add-On
+                        if let leftAddOn = leftAddOn {
+                            leftAddOnView(leftAddOn)
+                        }
+                        
+                        // Label
+                        textWithTypography(label)
+                            .foregroundStyle(textColor)
+                            .lineLimit(1)
+                        
+                        // Menu Icon
+                        if isMenu {
+                            Image("triangle-down-filled")
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundStyle(textColor)
+                                .frame(width: menuIconSize, height: menuIconSize)
+                        }
+                    }
+                    .padding(.horizontal, horizontalPadding)
+                    .padding(.trailing, extraRightPadding)
+                    .frame(minHeight: minHeight)
+                    .frame(minWidth: minWidth)
                 }
             }
-            .padding(.horizontal, horizontalPadding)
-            .padding(.trailing, extraRightPadding)
-            .frame(minHeight: minHeight)
-            .frame(minWidth: minWidth)
             .background {
                 if surface == .media && type == .secondary {
                     if #available(iOS 26.0, *), GlassEffectSettings.shared.isEnabled {
