@@ -1,6 +1,7 @@
 import SwiftUI
 import AVKit
 import AVFoundation
+import CoreMedia
 
 // MARK: - Today's Snapshot Scroll View v3
 
@@ -521,15 +522,23 @@ struct SimpleVideoPlayerView: View {
         ZStack {
             // Video Player Base
             ZStack {
-                if let player = player {
-                    VideoPlayer(player: player)
+                ZStack {
+                    if let player = player {
+                        VideoPlayer(player: player)
+                            .ignoresSafeArea()
+                            .onAppear {
+                                player.play()
+                            }
+                            .onDisappear {
+                                player.pause()
+                            }
+                    }
+                    
+                    // Dim overlay when paused
+                    Color.black.opacity(isPlaying ? 0 : 0.3)
                         .ignoresSafeArea()
-                        .onAppear {
-                            player.play()
-                        }
-                        .onDisappear {
-                            player.pause()
-                        }
+                        .allowsHitTesting(false)
+                        .animation(.linear(duration: 0.2), value: isPlaying)
                 }
                 
                 // Content Protection Gradient
@@ -552,7 +561,7 @@ struct SimpleVideoPlayerView: View {
                 .ignoresSafeArea(.all)
             }
             .onTapGesture {
-                withAnimation {
+                withAnimation(.linear(duration: 0.2)) {
                     isPlaying.toggle()
                     if isPlaying {
                         player?.play()
@@ -601,22 +610,27 @@ struct SimpleVideoPlayerView: View {
                             VStack(alignment: .leading, spacing: 10) {
                                 HStack(alignment: .center, spacing: 4) {
                                     Text("Becker Threads")
-                                        .font(.system(size: 15, weight: .semibold))
-                                        .foregroundStyle(Color.white)
-                                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                        .headline4Typography()
+                                        .textOnMediaShadow()
+                                        .foregroundStyle(Color("primaryTextOnMedia"))
                                     
                                     Text("·")
-                                        .font(.system(size: 15, weight: .semibold))
-                                        .foregroundStyle(Color.white)
-                                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                        .headline4Typography()
+                                        .textOnMediaShadow()
+                                        .foregroundStyle(Color("primaryTextOnMedia"))
                                     
                                     Button {
                                     } label: {
                                         Text("Follow")
-                                            .font(.system(size: 15, weight: .semibold))
-                                            .foregroundStyle(Color.white)
-                                            .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                            .headline4Typography()
+                                            .textOnMediaShadow()
+                                            .foregroundStyle(Color("primaryTextOnMedia"))
                                     }
+                                    .buttonStyle(FDSPressedState(
+                                        cornerRadius: 6,
+                                        isOnMedia: true,
+                                        padding: EdgeInsets(top: 8, leading: 4, bottom: 8, trailing: 4)
+                                    ))
                                 }
                                 
                                 // Music Info
@@ -624,13 +638,13 @@ struct SimpleVideoPlayerView: View {
                                     Image("music-filled")
                                         .resizable()
                                         .frame(width: 12, height: 12)
-                                        .foregroundStyle(Color.white.opacity(0.8))
-                                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                        .foregroundStyle(Color("secondaryIconOnMedia"))
+                                        .iconOnMediaShadow()
                                     
                                     Text("Original audio · Becker Threads")
-                                        .font(.system(size: 13))
-                                        .foregroundStyle(Color.white.opacity(0.8))
-                                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                        .meta4Typography()
+                                        .textOnMediaShadow()
+                                        .foregroundStyle(Color("secondaryTextOnMedia"))
                                         .lineLimit(1)
                                 }
                             }
@@ -639,14 +653,18 @@ struct SimpleVideoPlayerView: View {
                         
                         // Caption
                         Text("Cloud Dancer by Pantone - the 2026 Color of the Year 🎨")
-                            .font(.system(size: 15))
-                            .foregroundStyle(Color.white)
-                            .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                            .body3Typography()
+                            .textOnMediaShadow()
+                            .foregroundStyle(Color("primaryTextOnMedia"))
                             .lineLimit(isCaptionExpanded ? nil : 1)
                             .truncationMode(.tail)
-                            .onTapGesture {
-                                isCaptionExpanded.toggle()
-                            }
+                            .animation(.linear(duration: 0.2), value: isCaptionExpanded)
+                            .highPriorityGesture(
+                                TapGesture()
+                                    .onEnded { _ in
+                                        isCaptionExpanded.toggle()
+                                    }
+                            )
                     }
                     
                     // Right side: Vertical UFI Buttons
@@ -665,24 +683,81 @@ struct SimpleVideoPlayerView: View {
                     }
                 }
                 .padding(.leading, 12)
-                .padding(.trailing, 12)
-                .padding(.bottom, 32)
+                .padding(.bottom, 12)
             }
             
             // Play/Pause Controls (centered)
             if !isPlaying {
-                Button {
-                    isPlaying = true
-                    player?.play()
-                } label: {
-                    Image(systemName: "play.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 32, height: 32)
-                        .foregroundStyle(Color.white)
-                        .frame(width: 64, height: 64)
-                        .background(Color.black.opacity(0.3))
-                        .clipShape(Circle())
+                VStack {
+                    Spacer()
+                    HStack(spacing: 16) {
+                        Button {
+                            // Skip backward 10 seconds
+                            if let player = player {
+                                let currentTime = player.currentTime()
+                                let newTime = CMTimeSubtract(currentTime, CMTime(seconds: 10, preferredTimescale: 1))
+                                player.seek(to: newTime)
+                                player.play()
+                                isPlaying = true
+                            }
+                        } label: {
+                            Image("skip-backward-10-filled")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(Color("secondaryButtonIconOnMedia"))
+                                .frame(width: 40, height: 40)
+                                .background {
+                                    Circle()
+                                        .fill(.thinMaterial)
+                                        .colorScheme(.dark)
+                                }
+                        }
+                        .buttonStyle(FDSPressedState(circle: true, isOnMedia: true, scale: .small))
+                        
+                        Button {
+                            isPlaying = true
+                            player?.play()
+                        } label: {
+                            Image("play-filled")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(Color("secondaryButtonIconOnMedia"))
+                                .frame(width: 60, height: 60)
+                                .background {
+                                    Circle()
+                                        .fill(.thinMaterial)
+                                        .colorScheme(.dark)
+                                }
+                        }
+                        .buttonStyle(FDSPressedState(circle: true, isOnMedia: true, scale: .small))
+
+                        Button {
+                            // Skip forward 10 seconds
+                            if let player = player {
+                                let currentTime = player.currentTime()
+                                let newTime = CMTimeAdd(currentTime, CMTime(seconds: 10, preferredTimescale: 1))
+                                player.seek(to: newTime)
+                                player.play()
+                                isPlaying = true
+                            }
+                        } label: {
+                            Image("skip-forward-10-filled")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(Color("secondaryButtonIconOnMedia"))
+                                .frame(width: 40, height: 40)
+                                .background {
+                                    Circle()
+                                        .fill(.thinMaterial)
+                                        .colorScheme(.dark)
+                                }
+                        }
+                        .buttonStyle(FDSPressedState(circle: true, isOnMedia: true, scale: .small))
+                    }
+                    Spacer()
                 }
             }
         }
@@ -695,6 +770,9 @@ struct SimpleVideoPlayerView: View {
         // Try to load the video from the bundle
         if let bundleURL = Bundle.main.url(forResource: videoName, withExtension: "mp4") {
             player = AVPlayer(url: bundleURL)
+            
+            // Mute the player
+            player?.isMuted = true
         } else {
             // If video doesn't exist, create a blank player
             print("Video not found: \(videoName).mp4")
@@ -716,57 +794,85 @@ struct SimpleVideoPlayerView: View {
 // MARK: - Reel UFI Button
 
 struct ReelUFIButton: View {
-    let icon: String
-    var likedIcon: String? = nil
-    var count: String? = nil
-    @Binding var isLiked: Bool
-    @Binding var likeCount: Int
-    
-    // Regular action button
-    init(icon: String, count: String? = nil) {
-        self.icon = icon
-        self.likedIcon = nil
-        self.count = count
-        self._isLiked = .constant(false)
-        self._likeCount = .constant(0)
+    private enum ButtonType {
+        case action(icon: String, count: String?, action: () -> Void)
+        case like(icon: String, likedIcon: String, isLiked: Binding<Bool>, likeCount: Binding<Int>)
     }
     
-    // Like button
+    private let buttonType: ButtonType
+    @State private var isPressed = false
+    
+    init(icon: String, count: String? = nil, action: @escaping () -> Void = {}) {
+        self.buttonType = .action(icon: icon, count: count, action: action)
+    }
+    
     init(icon: String, likedIcon: String, count: String, isLiked: Binding<Bool>, likeCount: Binding<Int>) {
-        self.icon = icon
-        self.likedIcon = likedIcon
-        self.count = count
-        self._isLiked = isLiked
-        self._likeCount = likeCount
+        self.buttonType = .like(icon: icon, likedIcon: likedIcon, isLiked: isLiked, likeCount: likeCount)
     }
     
     var body: some View {
         Button {
-            if likedIcon != nil {
+            switch buttonType {
+            case .action(_, _, let action):
+                action()
+            case .like(_, _, let isLiked, let likeCount):
                 withAnimation {
-                    isLiked.toggle()
-                    likeCount += isLiked ? 1 : -1
+                    isLiked.wrappedValue.toggle()
+                    likeCount.wrappedValue += isLiked.wrappedValue ? 1 : -1
                 }
             }
         } label: {
             VStack(spacing: 8) {
-                Image(isLiked && likedIcon != nil ? likedIcon! : icon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 24, height: 24)
-                    .foregroundStyle(isLiked && likedIcon != nil ? Color("like") : Color.white)
-                    .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
-                
-                if let count = count {
-                    Text(count)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(Color.white)
-                        .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
+                switch buttonType {
+                case .action(let icon, let count, _):
+                    Image(icon)
+                        .renderingMode(.template)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                        .foregroundStyle(Color("primaryIconOnMedia"))
+                        .iconOnMediaShadow()
+                    
+                    if let count = count {
+                        Text(count)
+                            .meta4LinkTypography()
+                            .foregroundStyle(Color("primaryTextOnMedia"))
+                            .textOnMediaShadow()
+                    }
+                    
+                case .like(let icon, let likedIcon, let isLiked, let likeCount):
+                    let currentIcon = isLiked.wrappedValue ? likedIcon : icon
+                    
+                    Image(currentIcon)
+                        .renderingMode(isLiked.wrappedValue ? .original : .template)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                        .foregroundStyle(isLiked.wrappedValue ? Color.clear : Color("primaryIconOnMedia"))
+                        .scaleEffect(isLiked.wrappedValue ? 1.2 : 1.0)
+                        .iconOnMediaShadow()
+                    
+                    Text(likeCount.wrappedValue.formattedString)
+                        .meta4LinkTypography()
+                        .foregroundStyle(Color("primaryTextOnMedia"))
+                        .textOnMediaShadow()
                 }
             }
-            .frame(width: 48)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color("mediaPressed"))
+                    .frame(maxWidth: 48)
+                    .opacity(isPressed ? 1.0 : 0.0)
+            )
         }
-        .padding(.bottom, 16)
+        .buttonStyle(.plain)
+        .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
+            withAnimation {
+                isPressed = pressing
+            }
+        }, perform: {})
     }
 }
 
