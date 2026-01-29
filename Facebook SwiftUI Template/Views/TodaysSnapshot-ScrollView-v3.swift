@@ -329,7 +329,8 @@ struct TodaysSnapshotScrollView: View {
                 .frame(height: 32)
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.top, 8)
+            .padding(.bottom, 4)
             
             // Footer Action Chips (thumbs up/down)
             HStack(spacing: 8) {
