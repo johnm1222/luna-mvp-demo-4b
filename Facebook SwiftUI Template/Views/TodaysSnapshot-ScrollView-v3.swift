@@ -118,13 +118,11 @@ struct TodaysSnapshotScrollView: View {
                                 .id("snapshot-5")
                             }
                             .background(Color(hex: "C9CCD1"))
+                            .padding(.bottom, 4)  // 4px gap before footer
                             
-                            // Next sections will go here
-                            // Story sections .id("story-1"), .id("story-2"), etc.
-                            
-                            // Temporary spacing
-                            Color.clear
-                                .frame(height: 500)
+                            // Footer Unit (End of scroll)
+                            footerSection
+                                .id("footer")
                         }
                     }
                 }
@@ -274,6 +272,74 @@ struct TodaysSnapshotScrollView: View {
         .padding(.bottom, 20)
         .padding(.horizontal, 12)
         .background(Color("bottomSheetBackgroundDeemphasized"))  // Gray background F2F4F7
+    }
+    
+    // MARK: - Footer Section
+    
+    private var footerSection: some View {
+        VStack(spacing: 0) {
+            // Header message
+            VStack(spacing: 0) {
+                Text("Nice job, you're all caught up today!")
+                    .headline4Typography()
+                    .foregroundColor(Color("primaryText"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.horizontal, 12)
+            .padding(.top, 20)
+            .padding(.bottom, 20)
+            
+            // "Show more of these topics" section
+            FDSUnitHeader(
+                headlineText: "Show more of these topics",
+                hierarchyLevel: .level3
+            )
+            
+            // Action chips group
+            HStack(spacing: 8) {
+                FDSActionChip(
+                    size: .medium,
+                    label: "Grammys",
+                    action: {}
+                )
+                
+                FDSActionChip(
+                    size: .medium,
+                    label: "Robotaxis",
+                    action: {}
+                )
+                
+                FDSActionChip(
+                    size: .medium,
+                    label: "Add a topic",
+                    leftAddOn: .icon("plus-outline"),
+                    action: {}
+                )
+                
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.bottom, 8)
+            
+            // "Previous snapshots" footer button
+            Button(action: {}) {
+                HStack(spacing: 4) {
+                    Text("Previous snapshots")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(Color("secondaryText"))
+                    
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 12))
+                        .foregroundColor(Color("secondaryText"))
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 32)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .padding(.bottom, 12)
+        }
+        .background(Color("cardBackground"))  // White background
     }
     
     // MARK: - Snapshot Unit
