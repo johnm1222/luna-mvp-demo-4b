@@ -116,13 +116,16 @@ struct TodaysSnapshotScrollView: View {
                                     usernames: ["Denver Eats", "Food Scene", "Mile High Dining", "Restaurant Guide"]
                                 )
                                 .id("snapshot-5")
+                                
+                                // 4px gap before footer
+                                Color(hex: "C9CCD1")
+                                    .frame(height: 4)
+                                
+                                // Footer Unit (End of scroll)
+                                footerSection
+                                    .id("footer")
                             }
                             .background(Color(hex: "C9CCD1"))
-                            .padding(.bottom, 4)  // 4px gap before footer
-                            
-                            // Footer Unit (End of scroll)
-                            footerSection
-                                .id("footer")
                         }
                     }
                 }
@@ -148,35 +151,37 @@ struct TodaysSnapshotScrollView: View {
                     HStack {
                         Spacer()
                         
-                        if scrollOffset < 10 {
-                            // Show "Explore Today's snapshot" button when near top
-                            FDSActionChip(
-                                size: .medium,
-                                label: "Explore Today's snapshot",
-                                leftAddOn: .icon("arrow-down-outline"),
-                                customColor: Color("accentColor"),
-                                action: {
-                                    withAnimation(.easeInOut(duration: 0.45)) {
-                                        proxy.scrollTo("snapshot-1", anchor: .top)
+                        if scrollOffset < 2978 {
+                            if scrollOffset < 10 {
+                                // Show "Explore Today's snapshot" button when near top
+                                FDSActionChip(
+                                    size: .medium,
+                                    label: "Explore Today's snapshot",
+                                    leftAddOn: .icon("arrow-down-outline"),
+                                    customColor: Color("accentColor"),
+                                    action: {
+                                        withAnimation(.easeInOut(duration: 0.45)) {
+                                            proxy.scrollTo("snapshot-1", anchor: .top)
+                                        }
                                     }
-                                }
-                            )
-                            .shadow(color: Color.black.opacity(0.1), radius: 16, x: 0, y: 2)
-                            .transition(.opacity)
-                        } else {
-                            // Show icon-only "back to top" button when scrolled down
-                            FDSActionChip(
-                                size: .medium,
-                                label: "",
-                                leftAddOn: .icon("arrow-up-outline"),
-                                action: {
-                                    withAnimation(.easeInOut(duration: 0.45)) {
-                                        proxy.scrollTo("header", anchor: .top)
+                                )
+                                .shadow(color: Color.black.opacity(0.1), radius: 16, x: 0, y: 2)
+                                .transition(.opacity)
+                            } else {
+                                // Show icon-only "back to top" button when scrolled down
+                                FDSActionChip(
+                                    size: .medium,
+                                    label: "",
+                                    leftAddOn: .icon("arrow-up-outline"),
+                                    action: {
+                                        withAnimation(.easeInOut(duration: 0.45)) {
+                                            proxy.scrollTo("header", anchor: .top)
+                                        }
                                     }
-                                }
-                            )
-                            .shadow(color: Color.black.opacity(0.1), radius: 16, x: 0, y: 2)
-                            .transition(.opacity)
+                                )
+                                .shadow(color: Color.black.opacity(0.1), radius: 16, x: 0, y: 2)
+                                .transition(.opacity)
+                            }
                         }
                         
                         Spacer()
