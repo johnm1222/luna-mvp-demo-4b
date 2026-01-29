@@ -12,6 +12,18 @@ struct TodaysSnapshotScrollView: View {
     @State private var showVideoPlayer = false
     @State private var selectedVideoName: String = ""
     @State private var expandedUnits: [Int: Bool] = [:]  // Track which units are expanded
+    @State private var lastScrollOffset: CGFloat = 0
+    @State private var hasSnapped = false
+    
+    // Snap thresholds: Y positions where each unit is "in focus" (top of unit at top of viewport)
+    private let focusPositions: [Int: CGFloat] = [
+        1: 640,   // Pantone
+        2: 1208,  // Jokic
+        3: 1797,  // Winter Kids
+        4: 2366,  // Toddler Snacks
+        5: 2956   // Denver Restaurant Week
+    ]
+    private let snapThreshold: CGFloat = 140
     
     // DEBUG: Toggle this to show/hide scroll position indicator
     private let showScrollDebug = true
@@ -189,6 +201,9 @@ struct TodaysSnapshotScrollView: View {
                 .allowsHitTesting(true)
             }
             .navigationBarHidden(true)
+            .onChange(of: scrollOffset) { oldValue, newValue in
+                checkAndSnapIfNeeded(proxy: proxy, oldOffset: oldValue, newOffset: newValue)
+            }
         }
         .fullScreenCover(isPresented: $showVideoPlayer) {
             SnapshotReelPlayerView(videoName: selectedVideoName, isPresented: $showVideoPlayer)
@@ -566,6 +581,39 @@ struct TodaysSnapshotScrollView: View {
     }
     
     // MARK: - Helpers
+    
+    private func checkAndSnapIfNeeded(proxy: ScrollViewProxy, oldOffset: CGFloat, newOffset: CGFloat) {
+        // Only snap when scrolling upward (scroll value increasing)
+        guard newOffset > oldOffset else {
+            hasSnapped = false  // Reset snap flag when changing direction
+            return
+        }
+        
+        // Prevent multiple snaps in quick succession
+        guard !hasSnapped else { return }
+        
+        // Check each focus position to see if we're in snap range
+        for (unitId, focusPosition) in focusPositions {
+            let distanceToFocus = focusPosition - newOffset
+            
+            // If within threshold range (0 to 140 pixels below focus position)
+            if distanceToFocus >= 0 && distanceToFocus <= snapThreshold {
+                print("🧲 SNAP! Scrolled to \(Int(newOffset)), snapping to unit \(unitId) at \(Int(focusPosition))")
+                hasSnapped = true
+                
+                withAnimation(.spring(duration: 0.3)) {
+                    proxy.scrollTo("snapshot-\(unitId)", anchor: .top)
+                }
+                
+                // Reset snap flag after a delay
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    hasSnapped = false
+                }
+                
+                break
+            }
+        }
+    }
     
     private var formattedDate: String {
         let formatter = DateFormatter()
