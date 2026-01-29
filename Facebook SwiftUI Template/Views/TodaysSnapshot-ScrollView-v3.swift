@@ -321,7 +321,8 @@ struct TodaysSnapshotScrollView: View {
                 Spacer()
             }
             .padding(.horizontal, 12)
-            .padding(.bottom, 8)
+            .padding(.top, 4)
+            .padding(.bottom, 20)
             
             // "Previous snapshots" footer button
             Button(action: {}) {
