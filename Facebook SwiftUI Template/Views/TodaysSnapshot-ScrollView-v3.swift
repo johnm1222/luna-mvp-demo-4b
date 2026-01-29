@@ -128,7 +128,6 @@ struct TodaysSnapshotScrollView: View {
             .frame(maxWidth: .infinity)
         }
         .navigationBarHidden(true)
-        }
     }
     
     // MARK: - Header Section
