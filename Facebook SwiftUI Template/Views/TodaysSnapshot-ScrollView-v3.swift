@@ -23,7 +23,7 @@ struct TodaysSnapshotScrollView: View {
         4: 2366,  // Toddler Snacks
         5: 2956   // Denver Restaurant Week
     ]
-    private let snapThreshold: CGFloat = 140
+    private let snapThreshold: CGFloat = 280
     
     // DEBUG: Toggle this to show/hide scroll position indicator
     private let showScrollDebug = true
@@ -601,7 +601,7 @@ struct TodaysSnapshotScrollView: View {
                 print("🧲 SNAP! Scrolled to \(Int(newOffset)), snapping to unit \(unitId) at \(Int(focusPosition))")
                 hasSnapped = true
                 
-                withAnimation(.spring(duration: 0.3)) {
+                withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                     proxy.scrollTo("snapshot-\(unitId)", anchor: .top)
                 }
                 
