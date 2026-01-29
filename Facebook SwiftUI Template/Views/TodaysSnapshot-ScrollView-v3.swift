@@ -170,10 +170,9 @@ struct TodaysSnapshotScrollView: View {
                 )
             )
             
-            // Body Text
+            // Body Text - Body 3 Typography
             Text("Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design.")
-                .font(.system(size: 15))
-                .lineSpacing(5) // 20px line-height
+                .body3Typography()
                 .foregroundColor(Color("primaryText"))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 12)
@@ -192,9 +191,9 @@ struct TodaysSnapshotScrollView: View {
             .padding(.horizontal, 12)
             .padding(.bottom, 12)
             
-            // "More about this" Heading
+            // "More about this" Heading - Headline 4
             Text("More about this")
-                .font(.system(size: 15, weight: .medium))
+                .headline4Typography()
                 .foregroundColor(Color("primaryText"))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 12)
@@ -255,8 +254,16 @@ struct TodaysSnapshotScrollView: View {
     // MARK: - Placeholder Post Card
     
     private func placeholderPostCard(imageName: String) -> some View {
-        VStack(spacing: 0) {
-            // Post Header
+        // ZStack with full-bleed image and overlaid text
+        ZStack(alignment: .topLeading) {
+            // Base Layer: Full-bleed image fills entire card
+            Image(imageName)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 172, height: 259.571)
+                .clipped()
+            
+            // Top Layer: Header with text shadow for readability
             HStack(spacing: 8) {
                 Image(imageName)
                     .resizable()
@@ -266,36 +273,23 @@ struct TodaysSnapshotScrollView: View {
                 
                 Text("Becker Threads")
                     .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(Color("primaryText"))
+                    .foregroundColor(.white)
+                    .shadow(color: Color.black.opacity(0.6), radius: 1.5, x: 0, y: 0)
+                    .shadow(color: Color.black.opacity(0.4), radius: 1.25, x: 0, y: 0)
+                    .shadow(color: Color.black.opacity(0.5), radius: 1, x: 0, y: 0)
+                    .shadow(color: Color.black, radius: 0.5, x: 0, y: 0)
                 
                 Spacer()
             }
             .padding(12)
-            
-            // Media - Full width edge-to-edge image
-            Image(imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(height: 150)
-                .clipped()
-            
-            // Reactions (simplified)
-            HStack {
-                Text("42")
-                    .font(.system(size: 13))
-                    .foregroundColor(Color("secondaryText"))
-                Spacer()
-                Text("13")
-                    .font(.system(size: 13))
-                    .foregroundColor(Color("secondaryText"))
-            }
-            .padding(12)
         }
+        .frame(width: 172, height: 259.571)
         .cornerRadius(12)
         .overlay(
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color("borderUiEmphasis"), lineWidth: 1)
         )
+        .clipped()
     }
     
     // MARK: - Highlight List Item
