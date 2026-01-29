@@ -56,7 +56,8 @@ struct TodaysSnapshotScrollView: View {
                                 snapshotUnit(
                                     unitId: 1,
                                     title: "🎨 Pantone's color of the year",
-                                    bodyText: "Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design."
+                                    bodyText: "Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design.",
+                                    usernames: ["Design Weekly", "Color Trends", "Studio Palette", "Creative Space"]
                                 )
                                 .id("snapshot-1")
                                 
@@ -66,7 +67,8 @@ struct TodaysSnapshotScrollView: View {
                                     title: "🏀 Jokic MVP race lead",
                                     bodyText: "Even with limited availability during brief injury absences, Jokic's overall impact continues to separate him from other contenders. His efficiency, playmaking, and on-court control remain central to Denver's success, reinforcing his value beyond raw scoring totals.",
                                     image1: "nba_1",
-                                    image2: "nba_2"
+                                    image2: "nba_2",
+                                    usernames: ["Nuggets Nation", "Mile High Sports", "NBA Central", "Hoop Digest"]
                                 )
                                 .id("snapshot-2")
                                 
@@ -74,7 +76,12 @@ struct TodaysSnapshotScrollView: View {
                                 snapshotUnit(
                                     unitId: 3,
                                     title: "❄️ Children Museum Winter Programs",
-                                    bodyText: "New program focused on movement, sensory play, and early learning experiences designed for colder months. Sessions are structured with shorter time blocks and caregiver-friendly pacing, making them accessible for younger age groups. Registration is now open."
+                                    bodyText: "New program focused on movement, sensory play, and early learning experiences designed for colder months. Sessions are structured with shorter time blocks and caregiver-friendly pacing, making them accessible for younger age groups. Registration is now open.",
+                                    image1: "WInterKids",
+                                    image2: "WInterKids-1",
+                                    image3: "WInterKids-2",
+                                    image4: "WInterKids-3",
+                                    usernames: ["Denver Museums", "Family Activities", "Kids Learning", "Play & Explore"]
                                 )
                                 .id("snapshot-3")
                                 
@@ -82,7 +89,8 @@ struct TodaysSnapshotScrollView: View {
                                 snapshotUnit(
                                     unitId: 4,
                                     title: "🥣 High Protein Toddler Snacks",
-                                    bodyText: "Nutrition experts suggest adding ingredients like hemp hearts, peanut butter, or cottage cheese to familiar snacks. These additions help support healthy growth without requiring complex meal prep. Hemp hearts are especially notable as a complete protein, containing all nine essential amino acids."
+                                    bodyText: "Nutrition experts suggest adding ingredients like hemp hearts, peanut butter, or cottage cheese to familiar snacks. These additions help support healthy growth without requiring complex meal prep. Hemp hearts are especially notable as a complete protein, containing all nine essential amino acids.",
+                                    usernames: ["Healthy Kids", "Parent Nutrition", "Toddler Meals", "Smart Snacks"]
                                 )
                                 .id("snapshot-4")
                                 
@@ -94,7 +102,8 @@ struct TodaysSnapshotScrollView: View {
                                     image1: "DenverRestaruant",
                                     image2: "DenverRestaruant-1",
                                     image3: "DenverRestaruant-2",
-                                    image4: "DenverRestaruant-3"
+                                    image4: "DenverRestaruant-3",
+                                    usernames: ["Denver Eats", "Food Scene", "Mile High Dining", "Restaurant Guide"]
                                 )
                                 .id("snapshot-5")
                             }
@@ -259,7 +268,7 @@ struct TodaysSnapshotScrollView: View {
     
     // MARK: - Snapshot Unit
     
-    private func snapshotUnit(unitId: Int, title: String, bodyText: String, image1: String = "pantone_1", image2: String = "pantone_2", image3: String? = nil, image4: String? = nil) -> some View {
+    private func snapshotUnit(unitId: Int, title: String, bodyText: String, image1: String = "pantone_1", image2: String = "pantone_2", image3: String? = nil, image4: String? = nil, usernames: [String] = ["User", "User", "User", "User"]) -> some View {
         VStack(spacing: 0) {
             // Unit Header with emoji + title + 3-dot menu
             FDSUnitHeader(
@@ -310,7 +319,7 @@ struct TodaysSnapshotScrollView: View {
                         selectedVideoName = "dance"
                         showVideoPlayer = true
                     }) {
-                        placeholderPostCard(imageName: image1)
+                        placeholderPostCard(imageName: image1, username: usernames[0])
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -320,7 +329,7 @@ struct TodaysSnapshotScrollView: View {
                         selectedVideoName = "dance"
                         showVideoPlayer = true
                     }) {
-                        placeholderPostCard(imageName: image2)
+                        placeholderPostCard(imageName: image2, username: usernames[1])
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -334,7 +343,7 @@ struct TodaysSnapshotScrollView: View {
                             selectedVideoName = "dance"
                             showVideoPlayer = true
                         }) {
-                            placeholderPostCard(imageName: image3 ?? image1)
+                            placeholderPostCard(imageName: image3 ?? image1, username: usernames[2])
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -344,7 +353,7 @@ struct TodaysSnapshotScrollView: View {
                             selectedVideoName = "dance"
                             showVideoPlayer = true
                         }) {
-                            placeholderPostCard(imageName: image4 ?? image2)
+                            placeholderPostCard(imageName: image4 ?? image2, username: usernames[3])
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -403,7 +412,7 @@ struct TodaysSnapshotScrollView: View {
     
     // MARK: - Placeholder Post Card
     
-    private func placeholderPostCard(imageName: String) -> some View {
+    private func placeholderPostCard(imageName: String, username: String = "User") -> some View {
         // ZStack with full-bleed image and overlaid text
         ZStack(alignment: .topLeading) {
             // Base Layer: Full-bleed image fills entire card
@@ -421,7 +430,7 @@ struct TodaysSnapshotScrollView: View {
                     .frame(width: 20, height: 20)
                     .clipShape(Circle())
                 
-                Text("Becker Threads")
+                Text(username)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(.white)
                     .shadow(color: Color.black.opacity(0.3), radius: 2, x: 0, y: 1)
