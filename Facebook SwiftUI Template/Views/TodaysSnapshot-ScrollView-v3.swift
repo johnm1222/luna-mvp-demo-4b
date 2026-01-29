@@ -293,7 +293,7 @@ struct TodaysSnapshotScrollView: View {
             HStack(spacing: 8) {
                 // Post 1
                 Button(action: {
-                    selectedVideoName = "pantone_1"
+                    selectedVideoName = "dance"
                     showVideoPlayer = true
                 }) {
                     placeholderPostCard(imageName: "pantone_1")
@@ -303,7 +303,7 @@ struct TodaysSnapshotScrollView: View {
                 
                 // Post 2
                 Button(action: {
-                    selectedVideoName = "pantone_2"
+                    selectedVideoName = "dance"
                     showVideoPlayer = true
                 }) {
                     placeholderPostCard(imageName: "pantone_2")
