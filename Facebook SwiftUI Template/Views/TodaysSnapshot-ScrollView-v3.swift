@@ -122,6 +122,7 @@ struct TodaysSnapshotScrollView: View {
                                     .id("footer")
                             }
                             .background(Color(hex: "C9CCD1"))
+                            .padding(.top, 4)
                         }
                     }
                 }
