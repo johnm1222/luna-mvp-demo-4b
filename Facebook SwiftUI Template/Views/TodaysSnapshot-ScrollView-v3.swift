@@ -68,6 +68,8 @@ struct TodaysSnapshotScrollView: View {
                                     bodyText: "Even with limited availability during brief injury absences, Jokic's overall impact continues to separate him from other contenders. His efficiency, playmaking, and on-court control remain central to Denver's success, reinforcing his value beyond raw scoring totals.",
                                     image1: "nba_1",
                                     image2: "nba_2",
+                                    image3: "nba_3",
+                                    image4: "nba_4",
                                     usernames: ["Nuggets Nation", "Mile High Sports", "NBA Central", "Hoop Digest"]
                                 )
                                 .id("snapshot-2")
