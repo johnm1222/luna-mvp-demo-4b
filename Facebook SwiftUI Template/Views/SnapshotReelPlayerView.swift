@@ -12,6 +12,7 @@ struct SnapshotReelPlayerView: View {
     @State private var currentReelIndex: Int? = 0
     @State private var is2xSpeed = false
     @StateObject private var tabBarHelper = FDSTabBarHelper()
+    @State private var shuffledReels: [FacebookReel] = []
     
     // Create multiple snapshot reels to swipe through
     private var snapshotReels: [FacebookReel] {
@@ -85,9 +86,9 @@ struct SnapshotReelPlayerView: View {
                 ZStack {
                     ScrollView(.vertical, showsIndicators: false) {
                         LazyVStack(spacing: 0) {
-                            ForEach(0..<snapshotReels.count, id: \.self) { index in
+                            ForEach(0..<shuffledReels.count, id: \.self) { index in
                                 ReelVideoPlayer(
-                                    reel: snapshotReels[index],
+                                    reel: shuffledReels[index],
                                     reelIndex: index,
                                     isCurrentReel: currentReelIndex == index,
                                     bottomInset: 80,
@@ -155,6 +156,9 @@ struct SnapshotReelPlayerView: View {
                 tabBarHelper.currentReelIndex = newIndex
             }
             .onAppear {
+                // Shuffle reels randomly each time the player appears
+                shuffledReels = snapshotReels.shuffled()
+                currentReelIndex = 0
                 tabBarHelper.currentReelIndex = currentReelIndex
             }
         }
