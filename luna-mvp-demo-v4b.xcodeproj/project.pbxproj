@@ -98,7 +98,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 889A21142CAC656A00E158DF /* Build configuration list for PBXProject "luna-mvp-demo-v4" */;
+			buildConfigurationList = 889A21142CAC656A00E158DF /* Build configuration list for PBXProject "luna-mvp-demo-v4b" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -338,7 +338,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		889A21142CAC656A00E158DF /* Build configuration list for PBXProject "luna-mvp-demo-v4" */ = {
+		889A21142CAC656A00E158DF /* Build configuration list for PBXProject "luna-mvp-demo-v4b" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				889A21252CAC656C00E158DF /* Debug */,

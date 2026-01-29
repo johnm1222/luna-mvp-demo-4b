@@ -160,7 +160,7 @@ struct TodaysSnapshotScrollView: View {
             .navigationBarHidden(true)
         }
         .fullScreenCover(isPresented: $showVideoPlayer) {
-            SimpleVideoPlayerView(videoName: selectedVideoName, isPresented: $showVideoPlayer)
+            SnapshotReelPlayerView(videoName: selectedVideoName, isPresented: $showVideoPlayer)
                 .transition(.move(edge: .trailing))
         }
     }
