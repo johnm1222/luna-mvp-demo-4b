@@ -20,8 +20,11 @@ struct TodaysSnapshotScrollView: View {
                         headerSection
                             .id("header")
                         
+                        // Highlights Section
+                        highlightsSection(proxy: proxy)
+                            .id("highlights")
+                        
                         // Next sections will go here
-                        // Highlights section .id("highlights")
                         // Story sections .id("story-1"), .id("story-2"), etc.
                         
                         // Temporary spacing
@@ -80,6 +83,78 @@ struct TodaysSnapshotScrollView: View {
         .background(Color("surfaceBackground"))
     }
     
+    // MARK: - Highlights Section
+    
+    private func highlightsSection(proxy: ScrollViewProxy) -> some View {
+        // ListCellTable Container (gray background: F2F4F7)
+        VStack(spacing: 0) {
+            // White Card with list items
+            VStack(spacing: 0) {
+                // Unit Header: "Highlights" (has built-in padding: 12h, 20t, 8b)
+                FDSUnitHeader(
+                    headlineText: "Highlights",
+                    hierarchyLevel: .level3
+                )
+                .padding(.top, 8)  // Additional 8px on top of built-in 20px = 28px total
+                // FDSUnitHeader already has: 20px top, 8px bottom, 12px horizontal
+                // Need 16px between header and first item: 8px (built-in) + 8px = 16px
+                
+                // Group Container (Items Container)
+                VStack(spacing: 0) {
+                    ForEach(highlightItems.indices, id: \.self) { index in
+                        highlightListItem(item: highlightItems[index], index: index, proxy: proxy)
+                    }
+                }
+                .padding(.top, 8)  // 8px (UnitHeader bottom) + 8px = 16px total
+                .padding(.bottom, 8)
+            }
+            .background(Color("cardBackground"))  // White background
+            .cornerRadius(8)
+        }
+        .padding(.top, 20)
+        .padding(.bottom, 20)
+        .padding(.horizontal, 12)
+        .background(Color("bottomSheetBackgroundDeemphasized"))  // Gray background F2F4F7
+    }
+    
+    // MARK: - Highlight List Item
+    
+    private func highlightListItem(item: HighlightItem, index: Int, proxy: ScrollViewProxy) -> some View {
+        // Body Outer Container: 8px top/bottom, 0px left/right
+        Button(action: {
+            withAnimation {
+                proxy.scrollTo("story-\(index + 1)", anchor: .top)
+            }
+        }) {
+            // ContentRightAddon: 12px left/right, 0px top/bottom, 12px gap between children
+            HStack(alignment: .center, spacing: 12) {
+                // TextPairing: 4px top/bottom, 0px left/right, 2px gap, grow
+                VStack(alignment: .leading, spacing: 2) {
+                    // TextBlock: 15px font, 20px line-height
+                    (Text(item.title)
+                        .font(.body3Link)  // Body 3 Link (bold/semibold)
+                    + Text(" ")
+                    + Text(item.body)
+                        .font(.body3))  // Body 3 (regular)
+                        .foregroundColor(Color("primaryText"))
+                }
+                .padding(.vertical, 4)  // TextPairing padding
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                // ProfilePhotoCircle32Px
+                Image(item.profileImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 32, height: 32)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            .padding(.horizontal, 12)  // ContentRightAddon horizontal padding
+            .contentShape(Rectangle())
+        }
+        .padding(.vertical, 8)  // Body Outer Container vertical padding
+        .buttonStyle(FDSPressedState(cornerRadius: 0))
+    }
+    
     // MARK: - Helpers
     
     private var formattedDate: String {
@@ -88,6 +163,44 @@ struct TodaysSnapshotScrollView: View {
         return formatter.string(from: Date())
     }
 }
+
+// MARK: - Highlight Item Model
+
+struct HighlightItem {
+    let title: String
+    let body: String
+    let profileImage: String
+}
+
+// MARK: - Sample Data
+
+private let highlightItems: [HighlightItem] = [
+    HighlightItem(
+        title: "Pantone's Color of the Year",
+        body: "for 2026, Cloud Dancer, emphasizes connection, adaptability, and optimism.",
+        profileImage: "pantone_1"
+    ),
+    HighlightItem(
+        title: "Jokic MVP race lead",
+        body: "holds despite missed games, keeping league-wide debate intense through the midseason stretch.",
+        profileImage: "jokic_1"
+    ),
+    HighlightItem(
+        title: "Children Museum Winter Programs",
+        body: "expansion adds new hands-on activities for toddlers and young children.",
+        profileImage: "winter1"
+    ),
+    HighlightItem(
+        title: "High protein toddler snacks",
+        body: "can be easily upgraded using simple pantry additions recommended by dietitians.",
+        profileImage: "ffmeal_1"
+    ),
+    HighlightItem(
+        title: "Denver Restaurant Week Dates",
+        body: "were announced, featuring prix-fixe menus at 300+ restaurants.",
+        profileImage: "denver1"
+    )
+]
 
 #Preview {
     NavigationStack {
