@@ -46,11 +46,35 @@ struct TodaysSnapshotScrollView: View {
                             
                             // Snapshot Units Container
                             VStack(spacing: 4) {
-                                snapshotUnit()
-                                snapshotUnit()
-                                snapshotUnit()
-                                snapshotUnit()
-                                snapshotUnit()
+                                // 1. Pantone's color of the year
+                                snapshotUnit(
+                                    title: "🎨 Pantone's color of the year",
+                                    bodyText: "Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design."
+                                )
+                                
+                                // 2. Jokic MVP race lead
+                                snapshotUnit(
+                                    title: "🏀 Jokic MVP race lead",
+                                    bodyText: "Even with limited availability during brief injury absences, Jokic's overall impact continues to separate him from other contenders. His efficiency, playmaking, and on-court control remain central to Denver's success, reinforcing his value beyond raw scoring totals."
+                                )
+                                
+                                // 3. Children Museum Winter Programs
+                                snapshotUnit(
+                                    title: "❄️ Children Museum Winter Programs",
+                                    bodyText: "New program focused on movement, sensory play, and early learning experiences designed for colder months. Sessions are structured with shorter time blocks and caregiver-friendly pacing, making them accessible for younger age groups. Registration is now open."
+                                )
+                                
+                                // 4. High Protein Toddler Snacks
+                                snapshotUnit(
+                                    title: "🥣 High Protein Toddler Snacks",
+                                    bodyText: "Nutrition experts suggest adding ingredients like hemp hearts, peanut butter, or cottage cheese to familiar snacks. These additions help support healthy growth without requiring complex meal prep. Hemp hearts are especially notable as a complete protein, containing all nine essential amino acids."
+                                )
+                                
+                                // 5. Denver Restaurant Week
+                                snapshotUnit(
+                                    title: "🍣 Denver Restaurant Week",
+                                    bodyText: "The annual event features multi-course menus at set price tiers, giving diners a chance to try new restaurants at a lower cost. Participating spots span downtown, RiNo, LoHi, and neighborhood corridors across the metro area. Reservations tend to book early for higher-profile restaurants."
+                                )
                             }
                             .background(Color(hex: "C9CCD1"))
                             
@@ -164,11 +188,11 @@ struct TodaysSnapshotScrollView: View {
     
     // MARK: - Snapshot Unit
     
-    private func snapshotUnit() -> some View {
+    private func snapshotUnit(title: String, bodyText: String) -> some View {
         VStack(spacing: 0) {
             // Unit Header with emoji + title + 3-dot menu
             FDSUnitHeader(
-                headlineText: "🎨 Pantone's color of the year",
+                headlineText: title,
                 hierarchyLevel: .level3,
                 rightAddOn: .iconButton(
                     icon: "dots-3-horizontal-filled",
@@ -178,7 +202,7 @@ struct TodaysSnapshotScrollView: View {
             )
             
             // Body Text - Body 3 Typography
-            Text("Cloud Dancer reflects a broader shift toward softer, more grounding aesthetics amid cultural and economic uncertainty. Chosen by Pantone's color experts, the tone is intended to resonate across fashion, interiors, branding, and digital design.")
+            Text(bodyText)
                 .body3Typography()
                 .foregroundColor(Color("primaryText"))
                 .frame(maxWidth: .infinity, alignment: .leading)
